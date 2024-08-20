@@ -1,0 +1,203 @@
+.component-7-child {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 10px;
+    background-color: #9b1111;
+}
+
+.tareas-pendientes {
+    position: absolute;
+    top: 23.26%;
+    left: 5.58%;
+}
+
+.component-7 {
+    position: absolute;
+    top: 182px;
+    left: 114px;
+    background-color: #c63a3a;
+    width: 197px;
+    height: 43px;
+    font-size: 20px;
+    color: #fff;
+    font-family: Sen;
+}
+
+.todo-lista {
+    list-style-type: none; /* Elimina los marcadores de lista por defecto */
+    padding: 0; /* Elimina el padding por defecto de la lista */
+    margin: 0; /* Elimina el margen por defecto de la lista */
+}
+
+.checkbox {
+    margin-right: 10px; /* Espacio entre el checkbox y la fecha */
+    width: 20px; /* Tamaño del checkbox */
+    height: 20px;
+}
+
+.todo-item {
+    display: flex; /* Usamos flexbox para alinear los elementos */
+    align-items: center;
+    background-color: #eee;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px; /* Espacio entre cada nota */
+}
+
+.fecha {
+    flex: 1; /* Toma el espacio necesario a la izquierda */
+    font-family: Roboto;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.nota-texto {
+    flex:1;
+    font-family: Roboto;
+    color: rgba(0, 0, 0, 0.9);
+    text-align: left;
+}
+
+.item-container {
+    display: none; /* Si no estás usando este contenedor, lo ocultas */
+}
+
+.component-1 {
+    position: absolute;
+    top: 276px;
+    left: 39px;
+    width: 345px;
+    height: 320px;
+    color: rgba(34, 34, 34, 0.7);
+    font-family: Montserrat;
+}
+
+.container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.title {
+    position: absolute;
+    top: 4px;
+    left: 13px;
+}
+
+.form {
+    position: absolute;
+    top: -0.5px;
+    left: -0.5px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid rgba(217, 217, 217, 0.85);
+    box-sizing: border-box;
+    width: 321px;
+    height: 51px;
+}
+
+.enter-task-title {
+    position: absolute;
+    top: 16px;
+    left: 15px;
+    text-shadow: 1px 0 0 rgba(217, 217, 217, 0.85), 0 1px 0 rgba(217, 217, 217, 0.85), -1px 0 0 rgba(217, 217, 217, 0.85), 0 -1px 0 rgba(217, 217, 217, 0.85);
+}
+
+.form-parent {
+    position: absolute;
+    top: 37px;
+    left: 12px;
+    width: 320px;
+    height: 50px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.8);
+    font-family: Montserrat;
+}
+
+.form-input {
+    position: absolute;
+    top: 762px;
+    left: 40px;
+    background-color: rgba(255, 255, 255, 0);
+    width: 345px;
+    height: 90px;
+    font-size: 20px;
+    color: #49a0c5;
+    font-family: Sen;
+}
+
+/* Estilos para los iconos en la parte superior */
+.icono-1, .icono-2, .icono-3 {
+    position: absolute;
+    display:grid;
+    top: 8%;
+    width: 70px;
+    height: 60px;
+}
+
+.icono-1 {
+    left: 17%;
+}
+
+.icono-2 {
+    left: 42%;
+}
+
+.icono-3 {
+    left: 67%;
+}
+
+.icono-add {
+    display: block;
+    margin: 680px auto 20px auto; /* margin-top: 40px; margin-bottom: 20px; */
+    width: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.noise-texture {
+    position: absolute;
+    top: 20px;
+    left: 30px; /* Ajusta este valor para mover la textura hacia la izquierda */
+    width: 393px;
+    height: 852px;
+    object-fit: cover;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+}
+.vista-principal {
+    width: 100%;
+    max-width: 414px;
+    height: 896px;
+    position: relative;
+    background-color: #cd4640;
+    overflow: hidden;
+    text-align: left;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.9);
+    font-family: 'Roboto', sans-serif;
+}
+
+.todo-item-child {
+    position: relative;
+    width: 0px;
+    height: 0px;
+}
+
+.mobile {
+    position: absolute;
+    top: 0px;
+    left: -19px;
+    background-color: #cd4640;
+    width: 457px;
+    height: 912px;
+    overflow: hidden;
+  }
