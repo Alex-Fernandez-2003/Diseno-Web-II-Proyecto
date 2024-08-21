@@ -1,130 +1,60 @@
-.listas-de-tareas1 {
+.container-task {
     position: absolute;
-    top: 51px;
-    left: 137px;
-    border: 2px solid #9b1111; /* Añade un borde rojo */
-    background-color: #9b1111;
-    border-radius: 10px; /* Opcional: añade un redondeo al borde */
-    padding: 5px; /* Opcional: ajusta el padding para que el texto no toque el borde */
-}
-.listas-de-tareas-item {
-    position: absolute;
-    height: 6.01%;
-    width: 13.02%;
-    top: 4.29%;
-    right: 7.21%;
-    bottom: 89.7%;
-    left: 79.77%;
-    border-radius: 10px;
-    background-color: #ece3e3;
-}
-.listas-de-tareas-inner {
-    position: absolute;
-    height: 6.01%;
-    width: 13.02%;
-    top: 4.29%;
-    right: 81.63%;
-    bottom: 89.7%;
-    left: 5.35%;
-    border-radius: 10px;
-    background-color: #ece3e3;
-}
-.component-10 {
-    position: absolute;
-    top: 152px;
-    left: 42px;
+    margin-top: 40px;
+    left: 50px;
     width: 345px;
-    height: auto; /* Cambia a 'auto' para que se ajuste a la altura del contenido */
+    max-height: 600px;
     font-size: 16px;
     color: rgba(0, 0, 0, 0.9);
-    font-family: Roboto;
+    overflow: auto;
 }
 
-.tareas-lista {
-    list-style-type: none; /* Elimina los bullets de la lista */
-    padding: 0; /* Elimina el padding del ul */
-    margin: 0; /* Elimina el margen del ul */
+.task-list {
+    list-style-type: none;
+    padding: 0; 
+    margin: 0; 
 }
 
-.tarea-item {
+.task-item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px; /* Espacio entre cada item */
+    margin-bottom: 10px; 
     border-radius: 4px;
     background-color: #fff;
     padding: 10px;
 }
 
-.todo-item {
-    flex-shrink: 0; /* Evita que el todo-item se reduzca */
-}
-
 .tareas-en-lista {
-    margin-left: 10px; /* Espacio entre el todo-item y el texto */
-    font-family: Roboto;
+    margin-left: 10px;
     color: rgba(0, 0, 0, 0.9);
     text-align: left;
+    font-size: 12px;
 }
-.noise-texture {
-    position: absolute;
-    top: 40px;
-    left: 18px;
-    width: 393px;
-    height: 892px;
-    object-fit: cover;
-    opacity: 0.35;
-    mix-blend-mode: overlay;
-}
-.trash-2-icon {
+
+.trash-icon {
     position: flex;
-    top: 163px;
-    left: 348px;
-    width: 24px;
-    height: 24px;
-    overflow: hidden;
-    
+    margin-left: 8px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ECE3E3; 
+    background-color: #ECE3E3;
+    border-radius: 6px; 
+    padding: 2px;
 }
+
 .vector-icon {
     position: flex;
-    top: 164px;
-    left: 303px;
-    width: 19.8px;
-    height: 19.8px;
-
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ECE3E3;
+    background-color: #ECE3E3;
+    border-radius: 6px; 
+    padding: 2px; 
 }
 
-.component-15-icon {
+.Iconos{
     position: absolute;
-    top: 51px; /* Ajusta esta propiedad para alinear correctamente */
-    left: 353px; /* Ajusta esta propiedad para alinear correctamente */
-    width: 36px; /* Ajusta el tamaño según sea necesario */
-    height: 25px; /* Ajusta el tamaño según sea necesario */
-    border: 6px solid #ece3e3;
-    border-left: 2px solid #ece3e3;
-    border-right: 2px solid #ece3e3;
-    background-color: #ece3e3;
-    border-radius: 10px; /* Ajusta el redondeo si es necesario */
-}
-.sign-out-circle-icon {
-    position: absolute;
-    top: 51px; /* Ajusta esta propiedad para alinear correctamente */
-    left: 36px; /* Ajusta esta propiedad para alinear correctamente */
-    width: 33px; /* Ajusta el tamaño según sea necesario */
-    height: 32px; /* Ajusta el tamaño según sea necesario */
-    border: 2px solid #ece3e3; 
-    background-color: #ece3e3;
+    right: 10px;
+    display: flex;
 
-    border-radius: 10px; /* Ajusta el redondeo si es necesario */
 }
-.listas-de-tareas {
-    width: 457px;
-    position: relative;
-    background-color: #cd4640;
-    height: 932px;
-    overflow: hidden;
-    text-align: left;
-    font-size: 20px;
-    color: #fff;
-    font-family: Sen;
-}
-

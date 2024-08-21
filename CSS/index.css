@@ -1,63 +1,29 @@
-.noise-texture {
-    position: absolute;
-    top: 20px;
-    left: 17px;
-    width: 393px;
-    height: 852px;
-    object-fit: cover;
-    opacity: 0.35;
-    mix-blend-mode: overlay;
-}
-.todos-los-derechos {
-    position: absolute;
-    bottom: 94px;
-    left: calc(50% - 93.5px);
-    white-space: pre-wrap;
-}
-.image-1-icon {
-    position: absolute;
-    top: 31px;
-    left: -22px;
-    width: 471px;
-    height: 360px;
-    object-fit: cover;
-}
-.to-do-list {
-    margin: 0;
-}
-.music {
-    margin: 0;
-    white-space: pre-wrap;
-}
-.to-do-list-container {
+.name-container {
     position: absolute;
     top: 378px;
-    left: 16px;
+    left: 50%; 
+    transform: translateX(-50%); 
     font-size: 80px;
     font-family: Monofett;
     color: #9b1111;
-    text-align: left;
-    display: inline-block;
+    text-align: center;
+    display: inline-block; 
     width: 399px;
     height: 167px;
 }
-.mobile {
-    position: absolute;
-    top: 0px;
-    left: 5px;
-    background-color: #cd4640;
-    width: 425px;
-    height: 908px;
-    overflow: hidden;
+
+.appName {
+    margin: 0;
+    white-space: pre-wrap;
+    text-align: center; 
 }
-.create-account {
-    width: 100%;
-    position: relative;
-    background-color: #fff;
-    height: 912px;
-    overflow: hidden;
-    text-align: center;
-    font-size: 12px;
-    color: #808080;
-    font-family: Outfit;
+
+.logo {
+    position: absolute;
+    top: 31px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 471px;
+    height: 360px;
+    object-fit: cover;
 }
