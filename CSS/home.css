@@ -63,3 +63,17 @@
     background-color: #fff;
     padding: 10px;
 }
+
+.title {
+    color: white;
+    border: 2px solid #9B1111; 
+    background-color: #9B1111;
+    border-radius: 10px;
+    padding: 10px; 
+    width: fit-content; 
+    margin-left: auto;  /* Ajusta el margen izquierdo automáticamente */
+    margin-right: auto; /* Ajusta el margen derecho automáticamente */
+    display: block;     /* Asegura que el elemento se comporte como un bloque para que los márgenes automáticos funcionen */
+    text-align: center; /* Centra el texto dentro del elemento si hay varias líneas */
+  }
+  
