@@ -17,6 +17,8 @@
   	
 	<div class="margin">
 		  <div class="mobile">
+			<img class="textures" alt="" src="images/texture.png" />
+
 				<div class="formbox">
 					  <div class="user-title">Iniciar Sesión</div>
 					  <div class="signupbuttons">
@@ -40,29 +42,30 @@
 							</div>
 					  </div>
 
-					  <div class="forms">
-							<div class="input">
-								  <div class="o">Email</div>
-								  <input type="text" class="input-text" placeholder="Introduzca el email">
-							</div>
-							<div class="input">
-								  <div class="o">Contraseña</div>
-								  <input type="text" class="input-text" placeholder="Introduzca contraseña">
-							</div>
-					  </div>
+					  <form id="login-form" class="forms" method="POST">
+						<div class="input">
+							<label class="o" for="email">Email</label>
+							<input type="text" class="input-text" id="email" name="email" placeholder="Introduzca el email">
+						</div>
+						<div class="input">
+							<label class="o" for="password">Contraseña</label>
+							<input type="password" class="input-text" id="password" name="password" placeholder="Introduzca contraseña">
+						</div>
+						<div>
+							<button type="submit" class="button">Iniciar Sesión</button>
+						</div>
+					</form>
 
-					  <div class="button">
-							<div class="create-account1">Iniciar Sesión</div>
-					  </div>
-
-					  <div class="button-messagge">
+					  <div class="button-message">
 							<span>¿No tienes una cuenta? </span>
-							<span class="link">Crea Una</span>
+							<a href="createUser.html"class="link">Crea Una</a>
 					  </div>
+					  <div class="register-message">
+						<span id="message"></span>
+					</div>
 
 				</div>
 
-			  <img class="textures" alt="" src="images/texture.png" />
 				<div class="copyright">© 2024  Todos los derechos reservados</div>
 				<img class="image-1-icon" alt="" src="images/logo.png">
 				
@@ -70,7 +73,35 @@
 	</div>
 	
 	
+	<script>
+		const loginForm = document.getElementById('login-form');
+		const message = document.getElementById('message');
 	
+		loginForm.addEventListener('submit', (e) => {
+		  e.preventDefault();
 	
+		  const email = document.getElementById('email').value;
+		  const password = document.getElementById('password').value;
+
+		  if (email === '' || password === '') {
+			message.textContent = 'Por favor, complete todos los campos.';
+			return; 
+		  }
+	
+		  let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+	
+		  const account = accounts.find(account => account.email === email && account.password === password);
+	
+		  if (account) {
+			localStorage.setItem('currentUser', email);
+			window.location.href = 'home.html';
+		  } else {
+			message.textContent = 'Nombre de usuario o contraseña incorrectos.';
+		  }
+	
+		  loginForm.reset();
+		});
+	</script>
+
 </body>
 </html>

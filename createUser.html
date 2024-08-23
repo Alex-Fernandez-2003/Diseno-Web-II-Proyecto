@@ -17,6 +17,8 @@
   	
   	<div class="margin">
     		<div class="mobile">
+				<img class="textures" alt="" src="images/texture.png" />
+
       			<div class="formbox">
         				<div class="user-title">Crear Cuenta</div>
         				<div class="signupbuttons">
@@ -40,29 +42,33 @@
           					</div>
         				</div>
 
-						<div class="forms">
-							  <div class="input">
-									<div class="o">Email</div>
-									<input type="text" class="input-text" placeholder="Introduzca el email">
-							  </div>
-							  <div class="input">
-									<div class="o">Contraseña</div>
-									<input type="text" class="input-text" placeholder="Introduzca contraseña">
-							  </div>
-						</div>
+						<form id="register-form" class="forms" method="POST">
+							<div class="input">
+								<label class="o" for="email">Email</label>
+								<input type="text" class="input-text" id="email" name="email" placeholder="Introduzca el email">
+							</div>
+							<div class="input">
+								<label class="o" for="password">Contraseña</label>
+								<input type="password" class="input-text" id="password" name="password" placeholder="Introduzca contraseña">
+							</div>
+							<div>
+								<button type="submit" class="button">Crear Cuenta</button>
+							</div>
+						</form>
+	
 
-        				<div class="button">
-          					<div class="create-account1">Crear Cuenta</div>
-        				</div>
-
-        				<div class="button-messagge">
+        				<div class="button-message">
           					<span>¿Ya tienes una cuenta? </span>
-          					<span class="link">Inicia Sesion</span>
+          					<a href="loginUser.html" class="link">Inicia Sesion</a>
         				</div>
+						<div class="register-message">
+						  <span id="message"></span>
+					  </div>
+						
+
 
       			</div>
 
-				<img class="textures" alt="" src="images/texture.png" />
       			<div class="copyright">© 2024  Todos los derechos reservados</div>
       			<img class="image-1-icon" alt="" src="images/logo.png">
       			
@@ -71,6 +77,36 @@
   	
   	
   	
-  	
+  	<script>
+		const form = document.getElementById('register-form');
+		const message = document.getElementById('message');
+	
+		form.addEventListener('submit', (e) => {
+		  e.preventDefault();
+	
+		  const email = document.getElementById('email').value;
+		  const password = document.getElementById('password').value;
+	
+		  if (email === '' || password === '') {
+			message.textContent = 'Por favor, complete todos los campos.';
+			return; 
+		  }
+
+		  let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+	
+		  const accountExists = accounts.some(account => account.email === email);
+	
+		  if (accountExists) {
+			message.textContent = 'El correo ya se encuentra en uso';
+		  } else {
+			accounts.push({ email, password });
+			localStorage.setItem('accounts', JSON.stringify(accounts));
+			message.textContent = 'Cuenta registrada exitosamente.';
+		  }
+	
+		  form.reset();
+		});
+	  </script>
+
 </body>
 </html>

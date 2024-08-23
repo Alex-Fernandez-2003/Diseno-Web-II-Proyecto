@@ -110,12 +110,15 @@
   position: relative;
   font-weight: 600;
 }
+
 .button {
   position: relative;
   top: 50%;
-  left: calc(50% - 149.5px);
+  left: 50%; 
+  transform: translateX(-50%);   
   border-radius: 8px;
   background-color: #dc6464;
+  border-color: #dc6464;
   width: 300px;
   height: 48px;
   overflow: hidden;
@@ -128,8 +131,11 @@
   font-size: 16px;
   color: #fff;
 }
+.button:hover {
+background-color:#da4747;
+}
 
-.button-messagge {
+.button-message {
   position: absolute; 
   top: 90%;
   left: 50%; 
@@ -146,7 +152,7 @@
 
 .forms {
   position: absolute;
-  top: 296px;
+  top: 50%;
   left: calc(50% - 149.5px);
   width: 300px;
   display: flex;
@@ -174,3 +180,16 @@
   gap: 4px;
 }
 
+.buttonText{
+  margin-left: 10px;
+}
+
+.register-message {
+  position: relative;
+  font-size: 15px; 
+  top:20%;
+  left: 50%; 
+  transform: translateX(-50%); 
+  text-align: center;
+  color: #ff1212;
+}
