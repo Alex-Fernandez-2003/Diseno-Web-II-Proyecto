@@ -1,134 +1,253 @@
 <!DOCTYPE html>
 <html>
 <head>
-  	<meta charset="utf-8">
-  	<meta name="viewport" content="initial-scale=1, width=device-width">
-  	<link rel="stylesheet" href="./CSS/global.css" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="./CSS/global.css" />
     <link rel="stylesheet" href="./CSS/listas.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="margin">
-    <div class="mobile">
-      <img class="textures" alt="" src="images/texture.png">
+    <div class="margin">
+        <div class="mobile">
+            <img class="textures" alt="" src="images/texture.png">
+            <div class="section-options">
+                <div class="option-with-title">
+                    <a href="home.html">
+                        <img src="images/iconBack.png" alt="Volver" />
+                    </a>
+                </div>
+                <div class="page-title">Listas de Tareas</div>
+                <div class="option-with-title">
+                    <img id="add-list-btn" src="images/addList.png" alt="Añadir Lista" />
+                </div>
+            </div>
 
-      <div class="section-options">
-        <div class="option-with-title">
-          <a href="home.html">
-          <img src="images/iconBack.png" alt="Volver" />
-        </a>
+            <div class="container-task">
+                <ul class="task-list">
+                    <!-- Aquí se mostrarán las listas -->
+                </ul>
+            </div>
         </div>
-        <div class="page-title">Listas de Tareas</div>
-        <div class="option-with-title">
-          <img id="add-list-btn" src="images/addList.png" alt="Añadir Lista" />
+    </div>
+
+    <!-- Modal para añadir lista -->
+    <div id="add-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Añadir Nueva Lista</h2>
+            <input type="text" id="list-name-input" placeholder="Nombre de la lista">
+            <button id="add-list-submit">Añadir</button>
         </div>
-      </div>
-
-      <div class="container-task">
-        <ul class="task-list">
-          <!-- Aquí se mostrarán las listas -->
-        </ul>
-      </div>
     </div>
-  </div>
 
-  <!-- Modal -->
-  <div id="add-list-modal" class="modal">
-    <div class="modal-content">
-      <span class="close-button">&times;</span>
-      <h2>Añadir Nueva Lista</h2>
-      <input type="text" id="list-name-input" placeholder="Nombre de la lista">
-      <button id="add-list-submit">Añadir</button>
+    <!-- Modal para editar lista -->
+    <div id="edit-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button-edit">&times;</span>
+            <h2>Editar Lista</h2>
+            <input type="text" id="edit-list-name-input" placeholder="Nuevo nombre de la lista">
+            <button id="edit-list-submit">Actualizar</button>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // Obtener elementos
-    const addListBtn = document.getElementById('add-list-btn');
-    const modal = document.getElementById('add-list-modal');
-    const closeButton = document.querySelector('.close-button');
-    const addListSubmit = document.getElementById('add-list-submit');
-    const listNameInput = document.getElementById('list-name-input');
+    <!-- Modal para confirmar eliminación de lista -->
+    <div id="confirm-delete-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button-delete">&times;</span>
+            <h2>Eliminar Lista</h2>
+            <p id="delete-list-message">¿Estás seguro de que deseas eliminar esta lista?</p>
+            <button id="confirm-delete-submit">Eliminar</button>
+            <button id="cancel-delete">Cancelar</button>
+        </div>
+    </div>
 
-    // Abrir modal
-    addListBtn.addEventListener('click', () => {
-      modal.style.display = 'block';
-    });
+    <script>
+        // Obtener elementos
+        const addListBtn = document.getElementById('add-list-btn');
+        const addListModal = document.getElementById('add-list-modal');
+        const closeButton = document.querySelector('.close-button');
+        const addListSubmit = document.getElementById('add-list-submit');
+        const listNameInput = document.getElementById('list-name-input');
+        const taskListContainer = document.querySelector('.task-list');
+        
+        const editListModal = document.getElementById('edit-list-modal');
+        const closeButtonEdit = document.querySelector('.close-button-edit');
+        const editListSubmit = document.getElementById('edit-list-submit');
+        const editListNameInput = document.getElementById('edit-list-name-input');
+        let currentEditListName = '';
 
-    // Cerrar modal al hacer clic en la "x"
-    closeButton.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
+        const confirmDeleteModal = document.getElementById('confirm-delete-modal');
+        const closeButtonDelete = document.querySelector('.close-button-delete');
+        const confirmDeleteSubmit = document.getElementById('confirm-delete-submit');
+        const cancelDelete = document.getElementById('cancel-delete');
+        const deleteListMessage = document.getElementById('delete-list-message');
+        let currentDeleteListName = '';
 
-    // Cerrar modal al hacer clic fuera de él
-    window.addEventListener('click', (event) => {
-      if (event.target == modal) {
-        modal.style.display = 'none';
-      }
-    });
+        // Abrir modal para añadir lista
+        addListBtn.addEventListener('click', () => {
+            addListModal.style.display = 'block';
+        });
 
-    
-    // Guardar lista y cerrar modal
-    addListSubmit.addEventListener('click', () => {
-      const listName = listNameInput.value.trim();
-      
-      if (listName) {
-          const currentUser = localStorage.getItem('currentUser');
-          
-          if (currentUser) {
-              let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-              
-              // Verificar si la lista ya existe
-              const listExists = userLists.some(list => list.name.toLowerCase() === listName.toLowerCase());
-              
-              if (listExists) {
-                  alert('Esta lista ya existe. Por favor, elija otro nombre.');
-              } else {
-                  // Crear una nueva lista con quantity inicializado a 0
-                  const newList = { name: listName, quantity: 0 };
-                  userLists.push(newList);
-                  localStorage.setItem(currentUser, JSON.stringify(userLists));
-                  
-                  modal.style.display = 'none';  // Cerrar el modal
-                  listNameInput.value = '';      // Limpiar el campo de entrada
-                  location.reload();
-              }
-          }
-      } else {
-          alert('Por favor, ingrese un nombre de lista.');
-      }
-  });
-      
-  // Mostrar las listas en la página
-document.addEventListener('DOMContentLoaded', () => {
-  const currentUser = localStorage.getItem('currentUser');
-  const taskListContainer = document.querySelector('.task-list');
+        // Cerrar modal para añadir lista
+        closeButton.addEventListener('click', () => {
+            addListModal.style.display = 'none';
+        });
 
-  if (currentUser) {
-      let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+        // Cerrar modal al hacer clic fuera de él
+        window.addEventListener('click', (event) => {
+            if (event.target == addListModal) {
+                addListModal.style.display = 'none';
+            }
+            if (event.target == editListModal) {
+                editListModal.style.display = 'none';
+            }
+            if (event.target == confirmDeleteModal) {
+                confirmDeleteModal.style.display = 'none';
+            }
+        });
 
-      userLists.forEach(list => {
-          const listItem = document.createElement('li');
-          listItem.className = 'task-item';
-          listItem.innerHTML = `
-              <div>
-                  <div class="tareas-en-lista">${list.name}</div>
-                  <div class="tareas-en-lista">${list.quantity === 0 ? 'No hay tareas en la lista' : `Tareas en lista: ${list.quantity}`}</div>
-              </div>
-              <div class="Iconos">
-                  <img class="vector-icon" alt="" src="images/pencil.png">
-                  <img class="trash-icon" alt="" src="images/trash.png">
-              </div>
-          `;
-          taskListContainer.appendChild(listItem);
-      });
-  }
-});
-  </script>
+        // Guardar lista y cerrar modal
+        addListSubmit.addEventListener('click', () => {
+            const listName = listNameInput.value.trim();
+            
+            if (listName) {
+                const currentUser = localStorage.getItem('currentUser');
+                
+                if (currentUser) {
+                    let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+                    
+                    // Verificar si la lista ya existe
+                    const listExists = userLists.some(list => list.name.toLowerCase() === listName.toLowerCase());
+                    
+                    if (listExists) {
+                        alert('Esta lista ya existe. Por favor, elija otro nombre.');
+                    } else {
+                        // Crear una nueva lista con quantity inicializado a 0
+                        const newList = { name: listName, quantity: 0 };
+                        userLists.push(newList);
+                        localStorage.setItem(currentUser, JSON.stringify(userLists));
+                        
+                        addListModal.style.display = 'none';  // Cerrar el modal
+                        listNameInput.value = '';      // Limpiar el campo de entrada
+                        location.reload();
+                    }
+                }
+            } else {
+                alert('Por favor, ingrese un nombre de lista.');
+            }
+        });
+
+        // Mostrar las listas en la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUser = localStorage.getItem('currentUser');
+
+            if (currentUser) {
+                let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+
+                taskListContainer.innerHTML = ''; // Limpiar la lista actual
+
+                userLists.forEach(list => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'task-item';
+                    listItem.innerHTML = `
+                        <div>
+                            <div class="tareas-en-lista">${list.name}</div>
+                            <div class="tareas-en-lista">${list.quantity === 0 ? 'No hay tareas en la lista' : `Tareas en lista: ${list.quantity}`}</div>
+                        </div>
+                        <div class="Iconos">
+                            <img class="vector-icon" alt="" src="images/pencil.png" data-list-name="${list.name}">
+                            <img class="trash-icon" alt="" src="images/trash.png" data-list-name="${list.name}">
+                        </div>
+                    `;
+                    taskListContainer.appendChild(listItem);
+                });
+
+                // Añadir el manejador de eventos para los botones de lápiz
+                document.querySelectorAll('.vector-icon').forEach(icon => {
+                    icon.addEventListener('click', function() {
+                        currentEditListName = this.getAttribute('data-list-name');
+                        const listName = currentEditListName;
+                        editListNameInput.value = listName;
+                        editListModal.style.display = 'block';
+                    });
+                });
+
+                // Añadir el manejador de eventos para los botones de basurero
+                document.querySelectorAll('.trash-icon').forEach(icon => {
+                    icon.addEventListener('click', function() {
+                        currentDeleteListName = this.getAttribute('data-list-name');
+                        deleteListMessage.textContent = `¿Estás seguro de que deseas eliminar la lista "${currentDeleteListName}"?`;
+                        confirmDeleteModal.style.display = 'block';
+                    });
+                });
+            }
+        });
+
+        // Actualizar nombre de la lista
+        editListSubmit.addEventListener('click', () => {
+            const newListName = editListNameInput.value.trim();
+            
+            if (newListName) {
+                const currentUser = localStorage.getItem('currentUser');
+                
+                if (currentUser) {
+                    let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+                    
+                    // Verificar si la lista con el nuevo nombre ya existe
+                    const listExists = userLists.some(list => list.name.toLowerCase() === newListName.toLowerCase() && list.name !== currentEditListName);
+                    
+                    if (listExists) {
+                        alert('Ya existe una lista con ese nombre. Por favor, elija otro nombre.');
+                    } else {
+                        // Actualizar el nombre de la lista
+                        userLists = userLists.map(list => 
+                            list.name === currentEditListName 
+                            ? { ...list, name: newListName } 
+                            : list
+                        );
+                        localStorage.setItem(currentUser, JSON.stringify(userLists));
+                        
+                        editListModal.style.display = 'none';  // Cerrar el modal
+                        editListNameInput.value = '';           // Limpiar el campo de entrada
+                        location.reload();
+                    }
+                }
+            } else {
+                alert('Por favor, ingrese un nuevo nombre para la lista.');
+            }
+        });
+
+        // Cerrar modal para editar lista
+        closeButtonEdit.addEventListener('click', () => {
+            editListModal.style.display = 'none';
+        });
+
+        // Confirmar eliminación de la lista
+        confirmDeleteSubmit.addEventListener('click', () => {
+            const currentUser = localStorage.getItem('currentUser');
+            
+            if (currentUser) {
+                let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+                userLists = userLists.filter(list => list.name !== currentDeleteListName);
+                localStorage.setItem(currentUser, JSON.stringify(userLists));
+                
+                confirmDeleteModal.style.display = 'none';  // Cerrar el modal
+                location.reload();
+            }
+        });
+
+        // Cancelar eliminación de la lista
+        cancelDelete.addEventListener('click', () => {
+            confirmDeleteModal.style.display = 'none';  // Cerrar el modal
+        });
+
+        // Cerrar modal de confirmación de eliminación
+        closeButtonDelete.addEventListener('click', () => {
+            confirmDeleteModal.style.display = 'none';
+        });
+    </script>
 </body>
 </html>

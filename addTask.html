@@ -37,8 +37,8 @@
                     </div>
                     <div class="input">
                       <label class="form-text" for="date">¿Fecha Límite?</label>
-                      <input type="date" class="input-text" id="date" name="date" placeholder="Fecha sin fijar">
-                      <input type="time" class="input-text" id="hour" name="hour" placeholder="Hora sin fijar">
+                      <input type="text" class="input-text" id="date" name="date" placeholder="Fecha sin fijar" required>
+                      <input type="text" class="input-text" id="hour" name="hour" placeholder="Sin hora (todo el día)">
                     </div>
                     <div class="input">
                       <label class="form-text" for="listName">Añadir a la lista</label>
@@ -55,8 +55,33 @@
   	</div>
 
   	<script>
-      // Llenar el select con las listas disponibles y añadir tarea
+      // Lógica para cambiar el input de texto a date o time y viceversa
       document.addEventListener('DOMContentLoaded', () => {
+        const dateInput = document.getElementById('date');
+        const hourInput = document.getElementById('hour');
+
+        dateInput.addEventListener('focus', function() {
+          this.type = 'date';
+        });
+
+        dateInput.addEventListener('blur', function() {
+          if (!this.value) {
+            this.type = 'text';
+            this.placeholder = 'Sin fecha';
+          }
+        });
+
+        hourInput.addEventListener('focus', function() {
+          this.type = 'time';
+        });
+
+        hourInput.addEventListener('blur', function() {
+          if (!this.value) {
+            this.type = 'text';
+            this.placeholder = 'Sin hora (todo el día)';
+          }
+        });
+
         const taskForm = document.getElementById('add-task');
         const currentUser = localStorage.getItem('currentUser');
         const listNameSelect = document.getElementById('listName');
@@ -64,7 +89,6 @@
         if (currentUser) {
           const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
 
-          // Rellenar el select con las listas del currentUser
           userLists.forEach(list => {
             const option = document.createElement('option');
             option.value = list.name;
@@ -79,16 +103,15 @@
           listNameSelect.appendChild(option);
         }
 
-        // Manejar la adición de la tarea usando el ID del formulario
         taskForm.addEventListener('submit', (e) => {
           e.preventDefault();
 
           const taskName = document.getElementById('task').value.trim();
-          const taskDate = document.getElementById('date').value;
-          const taskHour = document.getElementById('hour').value;
+          const taskDate = dateInput.type === 'date' ? dateInput.value : null;
+          const taskHour = hourInput.type === 'time' ? hourInput.value : null;
           const selectedListName = listNameSelect.value;
 
-          if (!taskName || !taskDate || !taskHour || !selectedListName) {
+          if (!taskName || !selectedListName) {
             alert('Por favor, complete todos los campos antes de añadir la tarea.');
             return;
           }
@@ -100,7 +123,6 @@
             if (listIndex !== -1) {
               const selectedList = userLists[listIndex];
 
-              // Verificar si la lista tiene un array 'tasks', si no, inicializarlo
               if (!selectedList.tasks) {
                 selectedList.tasks = [];
               }
@@ -108,22 +130,23 @@
               const newTask = {
                 name: taskName,
                 date: taskDate,
-                hour: taskHour
+                hour: taskHour,
+                completed: false
               };
 
-              // Añadir la nueva tarea a la lista seleccionada
               selectedList.tasks.push(newTask);
 
-              // Incrementar la cantidad de tareas
               selectedList.quantity = (selectedList.quantity || 0) + 1;
 
-              // Guardar las listas actualizadas en localStorage
               localStorage.setItem(currentUser, JSON.stringify(userLists));
 
               alert('Tarea añadida correctamente a la lista.');
               
-              // Reiniciar el formulario
               taskForm.reset();
+              dateInput.type = 'text';
+              dateInput.placeholder = 'Sin fecha';
+              hourInput.type = 'text';
+              hourInput.placeholder = 'Sin hora (todo el día)';
             } else {
               alert('La lista seleccionada no existe.');
             }

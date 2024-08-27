@@ -62,7 +62,7 @@
 /* Estilo del modal */
 .modal {
     display: none; 
-    position: fixed;
+    position: absolute; 
     z-index: 1; 
     left: 0;
     top: 0;
@@ -70,17 +70,129 @@
     height: 100%;
     overflow: auto; 
     background-color: rgba(0, 0, 0, 0.4);
-  }
-  
-  .modal-content {
+    }
+
+.modal-content {
     background-color: #fefefe;
-    margin: 15% auto; 
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-  }
-  
+    width: 80%; /* Ajusta el ancho según el contenedor */
+    max-width: 400px; /* Ancho máximo para el modal */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    position: absolute; /* Posición absoluta dentro del contenedor */
+    top: 50%; /* Centrando verticalmente */
+    left: 50%; /* Centrando horizontalmente */
+    transform: translate(-50%, -50%); /* Alinea el centro del modal */
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+.modal input {
+    width: calc(100% - 22px); /* Ajusta el ancho del campo de entrada */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal button {
+    background-color: #CD4640;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+}
+
+.modal button:hover {
+    background-color: #a63a33;
+}
+
+
+/* Estilo del modal de confirmación de eliminación */
+#confirm-delete-modal {
+    display: none; 
+    position: absolute; /* Cambiar de fixed a absolute */
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ajusta el ancho según el contenedor */
+    max-width: 400px; /* Ancho máximo para el modal */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    position: absolute; /* Posición absoluta dentro del contenedor */
+    top: 50%; /* Centrando verticalmente */
+    left: 50%; /* Centrando horizontalmente */
+    transform: translate(-50%, -50%); /* Alinea el centro del modal */
+}
+
+.close-button-delete {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button-delete:hover,
+.close-button-delete:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+.modal p {
+    font-size: 16px;
+}
+
+.modal button {
+    background-color: #CD4640;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 45%;
+    margin: 5px;
+}
+
+.modal button:hover {
+    background-color: #a63a33;
+}
+ 
   .close-button {
     color: #aaa;
     float: right;

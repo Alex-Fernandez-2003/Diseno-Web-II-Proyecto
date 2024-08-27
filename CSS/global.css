@@ -55,14 +55,12 @@ body {
 }
 
 .section-options {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  margin-top: 20px;
-  display: flex; /* Habilita Flexbox para centrar el contenido */
-  align-items: center; /* Centra el texto verticalmente */
-  justify-content: center; /* Centra el texto horizontalmente (opcional) */
-  text-align: center; /* Asegura que el texto esté centrado si hay varias líneas */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px; /* Reducido de 20px a 10px */
+    margin-top: 10px; /* Reducido de 20px a 10px */
+    text-align: center;
 }
 
 .option {

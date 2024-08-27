@@ -137,7 +137,7 @@ background-color:#da4747;
 
 .button-message {
   position: absolute; 
-  top: 90%;
+  top: 94%;
   left: 50%; 
   transform: translateX(-50%); 
   color: #808080;
@@ -149,6 +149,17 @@ background-color:#da4747;
   font-weight: 500;
   color: #9c6fff;
 }
+
+a.signup-link {
+  color: black; /* Color del texto */
+  text-decoration: none; /* Elimina el subrayado */
+}
+
+a.signup-link:hover {
+  color: black; /* Mantén el color negro al pasar el cursor */
+  text-decoration: none; /* Asegura que no haya subrayado al pasar el cursor */
+}
+
 
 .forms {
   position: absolute;
@@ -181,15 +192,39 @@ background-color:#da4747;
 }
 
 .buttonText{
-  margin-left: 10px;
+  margin-left: 55px;
 }
 
 .register-message {
   position: relative;
   font-size: 15px; 
-  top:20%;
+  top:21%;
   left: 50%; 
   transform: translateX(-50%); 
   text-align: center;
-  color: #ff1212;
+  color: #e71212;
+}
+
+
+
+.slide-out {
+  animation: slideOut 0.5s forwards;
+}
+
+@keyframes slideOut {
+  from {
+      transform: translateX(0);
+  }
+  to {
+      transform: translateX(100vw);
+      opacity: 0;
+  }
+}
+
+
+.error-message {
+  color: red;
+  font-size: 0.875em; /* Ajusta el tamaño según sea necesario */
+  display: block;
+  margin-top: 0.25em;
 }
