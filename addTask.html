@@ -1,158 +1,271 @@
 <!DOCTYPE html>
 <html>
-<head>
-  	<meta charset="utf-8">
-  	<meta name="viewport" content="initial-scale=1, width=device-width">
-	<link rel="stylesheet" href="./CSS/global.css" />
-  	<link rel="stylesheet"  href="./CSS/addTask.css" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link rel="stylesheet" href="./CSS/global.css" />
+    <link rel="stylesheet" href="./CSS/addTask.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
-        rel="stylesheet"/>  	
-</head>
-<body>
-  	<div class="margin">
-    		<div class="mobile">	
-      			<img class="textures" alt="" src="images/texture.png">
-                  <div class="section-options">
-                    <div class="option-with-title">
-                        <p>Volver</p>
-                        <a href="home.html">                        
-                          <img src="images/iconBack.png" alt="Volver" />
-                        </a>
-                    </div>
-                    <div class="page-title">Nueva Tarea</div>
-                    <div class="option-with-title">
-                        <p>Evento</p>
-                        <a href="addEvent.html">                        
-                          <img src="images/iconAddEvent.png" alt="Añadir Lista" />
-                        </a>
-                    </div>
-                  </div>
-                  <form id="add-task" class="forms" method="POST">
-                    <div class="input">
-                      <label class="form-text" for="task">¿Qué hay que hacer?</label>
-                      <input type="text" class="input-text" id="task" name="task" placeholder="Introduzca tarea">
-                    </div>
-                    <div class="input">
-                      <label class="form-text" for="date">¿Fecha Límite?</label>
-                      <input type="text" class="input-text" id="date" name="date" placeholder="Fecha sin fijar" required>
-                      <input type="text" class="input-text" id="hour" name="hour" placeholder="Sin hora (todo el día)">
-                    </div>
-                    <div class="input">
-                      <label class="form-text" for="listName">Añadir a la lista</label>
-                      <select id="listName" name="listName" class="input-text">
-                        <option value="" disabled selected>Selecciona una lista</option>
-                        <!-- Las opciones de listas se llenarán dinámicamente -->
-                      </select>
-                    </div>
-                    <div>
-                      <button type="submit" class="button">Añadir Tarea</button>
-                    </div>
-                  </form>
-    		</div>
-  	</div>
+      href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="margin">
+      <div class="mobile">
+        <img class="textures" alt="" src="images/texture.png" />
+        <div class="section-options">
+          <div class="option-with-title">
+            <p>Volver</p>
+            <a href="home.html">
+              <img src="images/iconBack.png" alt="Volver" />
+            </a>
+          </div>
+          <div class="page-title">Nueva Tarea</div>
+          <div class="option-with-title">
+            <p>Evento</p>
+            <a href="addEvent.html">
+              <img src="images/iconAddEvent.png" alt="Añadir Lista" />
+            </a>
+          </div>
+        </div>
+        <form id="add-task" class="forms" method="POST">
+          <div class="input">
+            <label class="form-text" for="task">¿Qué hay que hacer?</label>
+            <input
+              type="text"
+              class="input-text"
+              id="task"
+              name="task"
+              placeholder="Introduzca tarea"
+              required
+              aria-label="Nombre de la tarea"
+            />
+          </div>
+          <div class="input">
+            <label class="form-text" for="date">¿Fecha Límite?</label>
+            <input
+              type="text"
+              class="input-text"
+              id="date"
+              name="date"
+              placeholder="Fecha sin fijar"
+              aria-label="Fecha límite"
+            />
+            <input
+              type="text"
+              class="input-text"
+              id="hour"
+              name="hour"
+              placeholder="Sin hora (todo el día)"
+              aria-label="Hora límite"
+            />
+          </div>
+          <div class="input">
+            <label class="form-text" for="listName">Añadir a la lista</label>
+            <select id="listName" name="listName" class="input-text" aria-label="Lista de tareas">
+              <option value="" disabled selected>Selecciona una lista</option>
+              <!-- Las opciones de listas se llenarán dinámicamente -->
+              <option value="create_new_list" class="create-new-list-option">
+                Crear nueva lista
+              </option>
+            </select>
+          </div>
+          <div>
+            <button type="submit" class="button" aria-label="Añadir tarea">Añadir Tarea</button>
+          </div>
+        </form>
+        <!-- Modal para añadir lista rápida -->
+        <div id="add-list-modal" class="modal" style="display: none">
+          <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Añadir Nueva Lista</h2>
+            <input
+              type="text"
+              id="list-name-input"
+              placeholder="Nombre de la lista"
+              aria-label="Nombre de la nueva lista"
+            />
+            <button id="add-list-submit" aria-label="Confirmar nueva lista">Añadir</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  	<script>
-      // Lógica para cambiar el input de texto a date o time y viceversa
-      document.addEventListener('DOMContentLoaded', () => {
-        const dateInput = document.getElementById('date');
-        const hourInput = document.getElementById('hour');
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const dateInput = document.getElementById("date");
+        const hourInput = document.getElementById("hour");
+        const addListModal = document.getElementById('add-list-modal');
+        const closeModalButton = addListModal.querySelector('.close-button');
+        const addListSubmitButton = document.getElementById('add-list-submit');
+        const listNameInput = document.getElementById('list-name-input');
+        const listNameSelect = document.getElementById("listName");
 
-        dateInput.addEventListener('focus', function() {
-          this.type = 'date';
+        dateInput.addEventListener("focus", function () {
+          this.type = "date";
         });
 
-        dateInput.addEventListener('blur', function() {
+        dateInput.addEventListener("blur", function () {
           if (!this.value) {
-            this.type = 'text';
-            this.placeholder = 'Sin fecha';
+            this.type = "text";
+            this.placeholder = "Sin fecha";
           }
         });
 
-        hourInput.addEventListener('focus', function() {
-          this.type = 'time';
+        hourInput.addEventListener("focus", function () {
+          this.type = "time";
         });
 
-        hourInput.addEventListener('blur', function() {
+        hourInput.addEventListener("blur", function () {
           if (!this.value) {
-            this.type = 'text';
-            this.placeholder = 'Sin hora (todo el día)';
+            this.type = "text";
+            this.placeholder = "Sin hora (todo el día)";
           }
         });
 
-        const taskForm = document.getElementById('add-task');
-        const currentUser = localStorage.getItem('currentUser');
-        const listNameSelect = document.getElementById('listName');
+        const taskForm = document.getElementById("add-task");
+        const currentUser = localStorage.getItem("currentUser");
 
         if (currentUser) {
           const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
 
-          userLists.forEach(list => {
-            const option = document.createElement('option');
+          userLists.forEach((list) => {
+            const option = document.createElement("option");
             option.value = list.name;
             option.textContent = list.name;
             listNameSelect.appendChild(option);
           });
         } else {
-          const option = document.createElement('option');
+          const option = document.createElement("option");
           option.value = "";
           option.textContent = "No hay listas disponibles";
           option.disabled = true;
           listNameSelect.appendChild(option);
         }
 
-        taskForm.addEventListener('submit', (e) => {
+        taskForm.addEventListener("submit", (e) => {
           e.preventDefault();
 
-          const taskName = document.getElementById('task').value.trim();
-          const taskDate = dateInput.type === 'date' ? dateInput.value : null;
-          const taskHour = hourInput.type === 'time' ? hourInput.value : null;
+          const taskName = document.getElementById("task").value.trim();
+          const taskDate = dateInput.type === "date" ? dateInput.value : null;
+          const taskHour = hourInput.type === "time" ? hourInput.value : null;
           const selectedListName = listNameSelect.value;
 
           if (!taskName || !selectedListName) {
-            alert('Por favor, complete todos los campos antes de añadir la tarea.');
+            alert(
+              "Por favor, complete todos los campos antes de añadir la tarea."
+            );
             return;
           }
 
           if (currentUser) {
             let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-            const listIndex = userLists.findIndex(list => list.name === selectedListName);
+            const listIndex = userLists.findIndex(
+              (list) => list.name === selectedListName
+            );
 
             if (listIndex !== -1) {
               const selectedList = userLists[listIndex];
+              const accounts =
+                JSON.parse(localStorage.getItem("accounts")) || [];
+              const account = accounts.find((acc) => acc.email === currentUser);
 
               if (!selectedList.tasks) {
                 selectedList.tasks = [];
               }
 
+              // Obtener y actualizar el ID de tarea
+              let taskID = account.taskID || 0;
               const newTask = {
+                id: taskID,
                 name: taskName,
                 date: taskDate,
                 hour: taskHour,
-                completed: false
+                completed: false,
               };
 
               selectedList.tasks.push(newTask);
-
               selectedList.quantity = (selectedList.quantity || 0) + 1;
 
-              localStorage.setItem(currentUser, JSON.stringify(userLists));
+              // Actualizar taskID en el objeto de cuentas
+              account.taskID += 1;
 
-              alert('Tarea añadida correctamente a la lista.');
-              
+              localStorage.setItem(currentUser, JSON.stringify(userLists));
+              localStorage.setItem("accounts", JSON.stringify(accounts));
+
+              alert("Tarea añadida con éxito.");
               taskForm.reset();
-              dateInput.type = 'text';
-              dateInput.placeholder = 'Sin fecha';
-              hourInput.type = 'text';
-              hourInput.placeholder = 'Sin hora (todo el día)';
             } else {
-              alert('La lista seleccionada no existe.');
+              alert(
+                "La lista seleccionada no existe. Por favor, cree una nueva lista."
+              );
             }
+          } else {
+            alert(
+              "No hay un usuario activo. Por favor, inicie sesión para continuar."
+            );
+          }
+        });
+
+        listNameSelect.addEventListener("change", (e) => {
+          if (e.target.value === "create_new_list") {
+            addListModal.style.display = "block";
+          }
+        });
+
+        closeModalButton.addEventListener("click", () => {
+          addListModal.style.display = "none";
+        });
+
+        addListSubmitButton.addEventListener("click", () => {
+          const newListName = listNameInput.value.trim();
+
+          if (newListName) {
+            if (currentUser) {
+              let userLists =
+                JSON.parse(localStorage.getItem(currentUser)) || [];
+
+              if (
+                userLists.some((list) => list.name.toLowerCase() === newListName.toLowerCase())
+              ) {
+                alert("La lista ya existe. Introduzca un nombre diferente.");
+              } else {
+                const newList = {
+                  name: newListName,
+                  tasks: [],
+                  quantity: 0,
+                };
+
+                userLists.push(newList);
+                localStorage.setItem(currentUser, JSON.stringify(userLists));
+
+                const newOption = document.createElement("option");
+                newOption.value = newListName;
+                newOption.textContent = newListName;
+                listNameSelect.insertBefore(newOption, listNameSelect.lastChild);
+
+                alert("Lista creada con éxito.");
+                listNameInput.value = "";
+                addListModal.style.display = "none";
+              }
+            } else {
+              alert("No hay un usuario activo. Por favor, inicie sesión.");
+            }
+          } else {
+            alert("Por favor, ingrese un nombre para la lista.");
+          }
+        });
+
+        // Cerrar modal al hacer clic fuera de la ventana modal
+        window.addEventListener("click", (event) => {
+          if (event.target === addListModal) {
+            addListModal.style.display = "none";
           }
         });
       });
     </script>
-</body>
+  </body>
 </html>

@@ -54,7 +54,6 @@
           />
         </div>
         <img class="textures" alt="" src="images/texture.png" />
-
       </div>
     </div>
 
@@ -98,69 +97,93 @@
       function displayTasks() {
         const currentUser = localStorage.getItem("currentUser");
         const selectedList = document.getElementById("taskListSelect").value;
-
+      
         if (currentUser) {
           const taskListContainer = document.querySelector(".task-list");
           const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
           taskListContainer.innerHTML = ""; // Limpiar la lista actual
-
-          const listsToShow = selectedList
-            ? userLists.filter((list) => list.name === selectedList)
-            : userLists;
-
-          listsToShow.forEach((list) => {
-            if (list.tasks) {
-              // Ordenar las tareas por fecha y hora más antigua
-              list.tasks.sort((a, b) => {
-                const dateA = new Date(`${a.date || ''}T${a.hour || '00:00'}`);
-                const dateB = new Date(`${b.date || ''}T${b.hour || '00:00'}`);
-                return dateA - dateB;
-              });
-
-              // Crear y agregar los elementos de las tareas al contenedor
-              list.tasks.forEach((task, index) => {
-                const taskItem = document.createElement("li");
-                taskItem.className = "task-item";
-                taskItem.innerHTML = `
-                    <input type="checkbox" class="checkbox" ${task.completed ? 'checked' : ''} data-list="${list.name}" data-index="${index}" />
-                    <div class="item-container"></div>
-                    <div class="container-date">                   
-                      <div class="date">${task.date || "Sin fecha"}</div>
-                      ${task.hour ? `<div class="time">${task.hour}</div>` : ''}
-                    </div>
-                    <div class="task">${task.name || "Nota de ejemplo..."}</div>
-                `;
-                taskListContainer.appendChild(taskItem);
-              });
+      
+          let tasksToShow = [];
+      
+          if (selectedList === "TERMINADAS") {
+            // Filtrar todas las tareas completadas
+            tasksToShow = userLists.flatMap(list => list.tasks || [])
+              .filter(task => task.completed);
+          } else if (selectedList) {
+            // Filtrar tareas de la lista seleccionada que no están completadas
+            const list = userLists.find(list => list.name === selectedList);
+            if (list && list.tasks) {
+              tasksToShow = list.tasks.filter(task => !task.completed);
             }
+          } else {
+            // Mostrar todas las tareas no completadas de todas las listas
+            tasksToShow = userLists.flatMap(list => list.tasks || [])
+              .filter(task => !task.completed);
+          }
+      
+          // Ordenar tareas por fecha y hora
+          tasksToShow.sort((a, b) => {
+            const dateA = new Date(`${a.date || ""}T${a.hour || "00:00"}`);
+            const dateB = new Date(`${b.date || ""}T${b.hour || "00:00"}`);
+            return dateA - dateB;
           });
-
+      
+          // Crear y agregar los elementos de las tareas al contenedor
+          tasksToShow.forEach(task => {
+            const listName = userLists.find(list => list.tasks && list.tasks.includes(task)).name;
+            const taskItem = document.createElement("li");
+            taskItem.className = "task-item";
+            taskItem.innerHTML = `
+              <input type="checkbox" class="checkbox" ${
+                task.completed ? "checked" : ""
+              } data-list="${listName}" data-task-id="${task.id}" />
+              <div class="item-container"></div>
+              <div class="container-date">
+                <div class="date">${task.date || "Sin fecha"}</div>
+                ${task.hour ? `<div class="time">${task.hour}</div>` : ""}
+              </div>
+              <div class="task">${task.name || "Nota de ejemplo..."}</div>
+            `;
+            taskListContainer.appendChild(taskItem);
+          });
+        
+      
+      
+      
           // Agregar evento para manejar el cambio de estado de las tareas
-          document.querySelectorAll('.checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', handleCheckboxChange);
+          document.querySelectorAll(".checkbox").forEach((checkbox) => {
+            checkbox.addEventListener("change", handleCheckboxChange);
           });
         }
       }
 
       // Función para manejar el cambio del checkbox
-      function handleCheckboxChange(event) {
-        const checkbox = event.target;
-        const listName = checkbox.getAttribute('data-list');
-        const taskIndex = checkbox.getAttribute('data-index');
-        const currentUser = localStorage.getItem("currentUser");
+function handleCheckboxChange(event) {
+  const checkbox = event.target;
+  const taskID = parseInt(checkbox.getAttribute("data-task-id"));
+  const listName = checkbox.getAttribute("data-list");
+  const currentUser = localStorage.getItem("currentUser");
 
-        if (currentUser) {
-          const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-          const list = userLists.find(list => list.name === listName);
+  if (currentUser) {
+    const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+    const list = userLists.find((list) => list.name === listName);
 
-          if (list && list.tasks) {
-            list.tasks[taskIndex].completed = checkbox.checked;
+    if (list && list.tasks) {
+      const task = list.tasks.find((task) => task.id === taskID);
 
-            // Guardar los cambios en localStorage
-            localStorage.setItem(currentUser, JSON.stringify(userLists));
-          }
-        }
+      if (task) {
+        task.completed = checkbox.checked;
+
+        // Guardar los cambios en localStorage
+        localStorage.setItem(currentUser, JSON.stringify(userLists));
+
+        // Volver a filtrar y mostrar las tareas después del cambio
+        displayTasks();
       }
+    }
+  }
+}
+
 
       // Ejecutar las funciones cuando se carga la página
       document.addEventListener("DOMContentLoaded", () => {
