@@ -1,4 +1,5 @@
-.forms {
+  /* Estilo para el formulario y los campos de entrada */
+  .forms {
     position: absolute;
     left: calc(50% - 149.5px);
     margin-top: 20px;
@@ -10,7 +11,7 @@
     gap: 16px;
     text-align: left;
   }
-  
+
   .input-text {
     width: 100%; /* Ajusta el ancho según sea necesario */
     max-width: 280px; /* Establece un ancho máximo para el input */
@@ -18,7 +19,7 @@
     border-radius: 5px;
     border: 1px solid #ccc; /* Bordes del input */
   }
-  
+
   .input {
     align-self: stretch;
     margin-top: 10%;
@@ -29,16 +30,16 @@
     gap: 4px;
   }
 
-  .form-text {
-    position: relative;
-    font-weight: 500;
-  }
-  
+    .form-text {
+      position: relative;
+      font-weight: 500;
+    }
+
   .button {
     position: relative;
     top: 50%;
-    left: 50%; 
-    transform: translateX(-50%);   
+    left: 50%;
+    transform: translateX(-50%);
     border-radius: 8px;
     background-color: #dc6464;
     border-color: #dc6464;
@@ -60,70 +61,125 @@
     background-color: #d84b4b;
   }
 
-  /* Estilo del modal */
-.modal {
-  display: none; 
-  position: absolute; 
-  z-index: 1; 
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto; 
-  background-color: rgba(0, 0, 0, 0.4);
+
+  /* Estilo para el botón "Crear nueva lista" */
+  .list-container button {
+    background-color: #e1dcdc; /* Color de fondo similar al de los otros botones */
+    border: none; /* Sin borde */
+    border-radius: 8px; /* Bordes redondeados como los otros botones */
+    padding: 5px; /* Ajusta el relleno si es necesario */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-.modal-content {
-  background-color: #fefefe;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Ajusta el ancho según el contenedor */
-  max-width: 400px; /* Ancho máximo para el modal */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  position: absolute; /* Posición absoluta dentro del contenedor */
-  top: 50%; /* Centrando verticalmente */
-  left: 50%; /* Centrando horizontalmente */
-  transform: translate(-50%, -50%); /* Alinea el centro del modal */
+  .list-container button img {
+    width: 24px; /* Ajusta el tamaño de la imagen para que sea consistente */
+    height: 24px;
+  }
+
+  /* Asegúrate de que el tamaño del campo de selección sea adecuado */
+  .list-container select {
+    width: 100%;
+    max-width: 220px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+
+
+  /* Estilo del modal */
+  .modal {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ajusta el ancho según el contenedor */
+    max-width: 400px; /* Ancho máximo para el modal */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    position: absolute; /* Posición absoluta dentro del contenedor */
+    top: 50%; /* Centrando verticalmente */
+    left: 50%; /* Centrando horizontalmente */
+    transform: translate(-50%, -50%); /* Alinea el centro del modal */
+  }
+
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close-button:hover,
+  .close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal h2 {
+    font-size: 18px;
+    margin-top: 0;
+  }
+
+  .modal input {
+    width: calc(100% - 22px); /* Ajusta el ancho del campo de entrada */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .modal button {
+    background-color: #CD4640;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+  }
+
+  .modal button:hover {
+    background-color: #a63a33;
+  }
+
+  
+
+  .custom-alignment {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el texto, el selector y el botón */
+    justify-content: flex-end; /* Mueve todo el contenido hacia la derecha */
+    gap: 10px; /* Espacio entre el selector y el botón */
 }
 
-.close-button {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+.custom-alignment label {
+    margin-right: 15px; /* Espacio entre el label y el selector */
+    white-space: nowrap; /* Evita que el texto se rompa en múltiples líneas */
 }
 
-.close-button:hover,
-.close-button:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+.custom-alignment select {
+    margin-right: 10px; /* Espacio entre el selector y el botón */
 }
-
-.modal h2 {
-  font-size: 18px;
-  margin-top: 0;
+.input .form-text {
+  /* Asegura que el texto está centrado en su contenedor */
+  text-align: center;
+  width: 100%;
 }
-
-.modal input {
-  width: calc(100% - 22px); /* Ajusta el ancho del campo de entrada */
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.modal button {
-  background-color: #CD4640;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
-}
-
-.modal button:hover {
-  background-color: #a63a33;
+.input .list-container {
+    width: 100%;
 }

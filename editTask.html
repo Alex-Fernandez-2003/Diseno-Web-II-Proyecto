@@ -20,7 +20,7 @@
                         <img src="images/iconBack.png" alt="Volver" />
                     </a>
                 </div>
-                <div class="page-title">Nueva Tarea</div>
+                <div class="page-title">Editar Tarea</div>
                 <div class="option-with-title">
                     <p>Evento</p>
                     <a href="addEvent.html">                        
@@ -38,10 +38,9 @@
                     <input type="text" class="input-text" id="date" name="date" placeholder="Fecha sin fijar" aria-label="Fecha límite">
                     <input type="text" class="input-text" id="hour" name="hour" placeholder="Sin hora (todo el día)" aria-label="Hora límite">
                 </div>
-
                 <div class="input">
                     <label class="form-text" for="listName">Añadir a la lista</label>
-                    <div class="list-container custom-alignment">
+                    <div class="list-container">
                         <select id="listName" name="listName" class="input-text" aria-label="Lista de tareas">
                             <option value="" disabled selected>Selecciona una lista</option>
                             <!-- Las opciones de listas se llenarán dinámicamente -->
@@ -51,10 +50,8 @@
                         </button>
                     </div>
                 </div>
-
-
                 <div>
-                    <button type="submit" class="button" aria-label="Añadir tarea">Añadir Tarea</button>
+                    <button type="submit" class="button" aria-label="Guardar cambios">Guardar Cambios</button>
                 </div>
             </form>
         </div>
@@ -81,157 +78,143 @@
             const listNameInput = document.getElementById('list-name-input');
             const createNewListButton = document.getElementById('create-new-list-button');
             const taskForm = document.getElementById('add-task');
+            const taskNameInput = document.getElementById('task');
             const currentUser = localStorage.getItem('currentUser');
-
+            
+            // Obtener el ID de la tarea desde la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const taskID = parseInt(urlParams.get('taskID'));
+    
+            // Rellenar el formulario con los datos de la tarea
+            if (currentUser && !isNaN(taskID)) {
+                const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+    
+                userLists.forEach((list) => {
+                    if (list.tasks) {
+                        const task = list.tasks.find(task => task.id === taskID);
+                        if (task) {
+                            taskNameInput.value = task.name || "";
+                            dateInput.value = task.date || "";
+                            hourInput.value = task.hour || "";
+                            listNameSelect.innerHTML = ""; // Limpiar el select
+    
+                            // Agregar las opciones de listas al select
+                            userLists.forEach((list) => {
+                                const option = document.createElement('option');
+                                option.value = list.name;
+                                option.text = list.name;
+                                if (list.name === list.name) {
+                                    option.selected = true;
+                                }
+                                listNameSelect.appendChild(option);
+                            });
+    
+                            listNameSelect.value = list.name; // Seleccionar la lista correcta
+                        }
+                    }
+                });
+            }
+    
+            // Al enviar el formulario, actualizar la tarea en localStorage
+            taskForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (currentUser && !isNaN(taskID)) {
+                    const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+            
+                    userLists.forEach((list) => {
+                        if (list.tasks) {
+                            const task = list.tasks.find(task => task.id === taskID);
+                            if (task) {
+                                // Actualizar los datos de la tarea
+                                task.name = taskNameInput.value.trim() || "Sin nombre";
+                                task.date = dateInput.value || null;
+                                task.hour = hourInput.value || null;
+            
+                                // Si la tarea se mueve a una lista diferente
+                                if (listNameSelect.value !== list.name) {
+                                    // Remover tarea de la lista actual
+                                    list.tasks = list.tasks.filter(t => t.id !== taskID);
+                                    list.quantity = list.tasks.length;  // Actualizar la cantidad de tareas en la lista original
+            
+                                    // Encontrar la nueva lista y añadir la tarea
+                                    const newList = userLists.find(l => l.name === listNameSelect.value);
+                                    if (newList) {
+                                        newList.tasks.push(task);
+                                        newList.quantity = newList.tasks.length;  // Actualizar la cantidad de tareas en la nueva lista
+                                    }
+                                } else {
+                                    // Si la tarea permanece en la misma lista, no hay necesidad de actualizar quantity
+                                }
+            
+                                // Guardar los cambios en localStorage
+                                localStorage.setItem(currentUser, JSON.stringify(userLists));
+                                alert('Tarea actualizada correctamente.');
+                                window.location.href = 'home.html'; // Redirigir de vuelta a la página principal
+                            }
+                        }
+                    });
+                }
+            });
+            
+    
             // Cambiar tipo de input al enfocar y desenfocar
             dateInput.addEventListener('focus', function() {
                 this.type = 'date';
             });
-
+    
             dateInput.addEventListener('blur', function() {
                 if (!this.value) {
                     this.type = 'text';
                     this.placeholder = 'Sin fecha';
                 }
             });
-
+    
             hourInput.addEventListener('focus', function() {
                 this.type = 'time';
             });
-
+    
             hourInput.addEventListener('blur', function() {
                 if (!this.value) {
                     this.type = 'text';
                     this.placeholder = 'Sin hora (todo el día)';
                 }
             });
-
+    
             // Mostrar modal
             createNewListButton.addEventListener('click', () => {
                 addListModal.style.display = 'block';
             });
-
+    
             // Cerrar modal
             closeModalButton.addEventListener('click', () => {
                 addListModal.style.display = 'none';
             });
-
+    
             // Añadir nueva lista
             addListSubmitButton.addEventListener('click', () => {
                 const newListName = listNameInput.value.trim();
-                if (newListName) {
-                    if (currentUser) {
-                        let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-
-                        if (userLists.some(list => list.name.toLowerCase() === newListName.toLowerCase())) {
-                            alert('La lista ya existe. Introduzca un nombre diferente.');
-                        } else {
-                            const newList = {
-                                name: newListName,
-                                tasks: [],
-                                quantity: 0,
-                            };
-
-                            userLists.push(newList);
-                            localStorage.setItem(currentUser, JSON.stringify(userLists));
-
-                            const newOption = document.createElement('option');
-                            newOption.value = newListName;
-                            newOption.textContent = newListName;
-                            listNameSelect.appendChild(newOption);
-
-                            alert('Lista creada con éxito.');
-                            listNameInput.value = '';
-                            addListModal.style.display = 'none';
-                        }
-                    } else {
-                        alert('No hay un usuario activo. Por favor, inicie sesión.');
-                    }
-                } else {
-                    alert('Por favor, ingrese un nombre para la lista.');
-                }
-            });
-
-            // Cerrar el modal si se hace clic fuera del modal
-            window.addEventListener('click', (event) => {
-                if (event.target === addListModal) {
-                    addListModal.style.display = 'none';
-                }
-            });
-
-            // Cargar listas al iniciar
-            if (currentUser) {
-                const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-                userLists.forEach(list => {
-                    const option = document.createElement('option');
-                    option.value = list.name;
-                    option.textContent = list.name;
-                    listNameSelect.appendChild(option);
-                });
-            } else {
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'No hay listas disponibles';
-                option.disabled = true;
-                listNameSelect.appendChild(option);
-            }
-
-            // Manejo de envío de formulario
-            taskForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const taskName = document.getElementById('task').value.trim();
-                const taskDate = dateInput.type === 'date' ? dateInput.value : null;
-                const taskHour = hourInput.type === 'time' ? hourInput.value : null;
-                const selectedListName = listNameSelect.value;
-
-                if (!taskName || !selectedListName) {
-                    alert('Por favor, complete todos los campos antes de añadir la tarea.');
-                    return;
-                }
-
-                if (currentUser) {
-                    let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-                    const listIndex = userLists.findIndex(list => list.name === selectedListName);
-
-                    if (listIndex !== -1) {
-                        const selectedList = userLists[listIndex];
-                        const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-                        const account = accounts.find(acc => acc.email === currentUser);
-
-                        if (!selectedList.tasks) {
-                            selectedList.tasks = [];
-                        }
-
-                        // Obtener y actualizar el ID de tarea
-                        let taskID = account.taskID || 0;
-                        const newTask = {
-                            id: taskID,
-                            name: taskName,
-                            date: taskDate,
-                            hour: taskHour,
-                            completed: false,
-                        };
-
-                        selectedList.tasks.push(newTask);
-                        selectedList.quantity = (selectedList.quantity || 0) + 1;
-
-                        // Actualizar taskID en el objeto de cuentas
-                        account.taskID += 1;
-
+                if (newListName && currentUser) {
+                    const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+    
+                    if (!userLists.some(list => list.name === newListName)) {
+                        userLists.push({ name: newListName, tasks: [], quantity: 0 });
                         localStorage.setItem(currentUser, JSON.stringify(userLists));
-                        localStorage.setItem('accounts', JSON.stringify(accounts));
-
-                        alert('Tarea añadida con éxito.');
-                        taskForm.reset();
+    
+                        const option = document.createElement('option');
+                        option.value = newListName;
+                        option.text = newListName;
+                        listNameSelect.appendChild(option);
+                        listNameSelect.value = newListName;
+    
+                        addListModal.style.display = 'none';
+                        listNameInput.value = '';
                     } else {
-                        alert('La lista seleccionada no existe. Por favor, cree una nueva lista.');
+                        alert('Ya existe una lista con ese nombre.');
                     }
-                } else {
-                    alert('No hay un usuario activo. Por favor, inicie sesión para continuar.');
                 }
             });
         });
     </script>
+    
 </body>
 </html>

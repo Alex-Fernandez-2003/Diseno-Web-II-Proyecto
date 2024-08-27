@@ -47,11 +47,17 @@
           <a href="addTask.html">
             <img class="icon-add" alt="Añadir" src="images/iconMore.png" />
           </a>
-          <input
+          <div >
+            <form id="add-fast-task" class="section-options" method="POST">
+            <input
             type="text"
+            id="quick-task-input"
             class="quick-task-input"
             placeholder="Introduzca tarea rápida"
           />
+          <button type="submit" class="button">✓</button>
+          </form>
+          </div>
         </div>
         <img class="textures" alt="" src="images/texture.png" />
       </div>
@@ -97,40 +103,45 @@
       function displayTasks() {
         const currentUser = localStorage.getItem("currentUser");
         const selectedList = document.getElementById("taskListSelect").value;
-      
+
         if (currentUser) {
           const taskListContainer = document.querySelector(".task-list");
           const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
           taskListContainer.innerHTML = ""; // Limpiar la lista actual
-      
+
           let tasksToShow = [];
-      
+
           if (selectedList === "TERMINADAS") {
             // Filtrar todas las tareas completadas
-            tasksToShow = userLists.flatMap(list => list.tasks || [])
-              .filter(task => task.completed);
+            tasksToShow = userLists
+              .flatMap((list) => list.tasks || [])
+              .filter((task) => task.completed);
           } else if (selectedList) {
             // Filtrar tareas de la lista seleccionada que no están completadas
-            const list = userLists.find(list => list.name === selectedList);
+            const list = userLists.find((list) => list.name === selectedList);
             if (list && list.tasks) {
-              tasksToShow = list.tasks.filter(task => !task.completed);
+              tasksToShow = list.tasks.filter((task) => !task.completed);
             }
           } else {
             // Mostrar todas las tareas no completadas de todas las listas
-            tasksToShow = userLists.flatMap(list => list.tasks || [])
-              .filter(task => !task.completed);
+            tasksToShow = userLists
+              .flatMap((list) => list.tasks || [])
+              .filter((task) => !task.completed);
           }
-      
-          // Ordenar tareas por fecha y hora
-          tasksToShow.sort((a, b) => {
-            const dateA = new Date(`${a.date || ""}T${a.hour || "00:00"}`);
-            const dateB = new Date(`${b.date || ""}T${b.hour || "00:00"}`);
-            return dateA - dateB;
-          });
-      
+
+          // Ordenar tareas por fecha y hora, colocando las tareas sin fecha ni hora al final
+tasksToShow.sort((a, b) => {
+  const dateA = a.date ? new Date(`${a.date}T${a.hour || '00:00'}`) : Infinity;
+  const dateB = b.date ? new Date(`${b.date}T${b.hour || '00:00'}`) : Infinity;
+
+  return dateA - dateB;
+});
+
           // Crear y agregar los elementos de las tareas al contenedor
-          tasksToShow.forEach(task => {
-            const listName = userLists.find(list => list.tasks && list.tasks.includes(task)).name;
+          tasksToShow.forEach((task) => {
+            const listName = userLists.find(
+              (list) => list.tasks && list.tasks.includes(task)
+            ).name;
             const taskItem = document.createElement("li");
             taskItem.className = "task-item";
             taskItem.innerHTML = `
@@ -139,17 +150,23 @@
               } data-list="${listName}" data-task-id="${task.id}" />
               <div class="item-container"></div>
               <div class="container-date">
-                <div class="date">${task.date || "Sin fecha"}</div>
+                <div class="date">${task.date || ""}</div>
                 ${task.hour ? `<div class="time">${task.hour}</div>` : ""}
               </div>
               <div class="task">${task.name || "Nota de ejemplo..."}</div>
+              <img src="images/pencil.png" alt="Task Image" class="vector-icon" data-task-id="${task.id}" />
             `;
             taskListContainer.appendChild(taskItem);
           });
-        
-      
-      
-      
+          // Agregar eventos a las imágenes para redirigir al editar tarea
+        document.querySelectorAll(".vector-icon").forEach((icon) => {
+            icon.addEventListener("click", (event) => {
+                const taskID = event.target.getAttribute("data-task-id");
+                // Redirigir a editTask.html y pasar el taskID como parámetro
+                window.location.href = `editTask.html?taskID=${taskID}`;
+            });
+        });
+
           // Agregar evento para manejar el cambio de estado de las tareas
           document.querySelectorAll(".checkbox").forEach((checkbox) => {
             checkbox.addEventListener("change", handleCheckboxChange);
@@ -158,37 +175,120 @@
       }
 
       // Función para manejar el cambio del checkbox
-function handleCheckboxChange(event) {
-  const checkbox = event.target;
-  const taskID = parseInt(checkbox.getAttribute("data-task-id"));
-  const listName = checkbox.getAttribute("data-list");
-  const currentUser = localStorage.getItem("currentUser");
+      function handleCheckboxChange(event) {
+        const checkbox = event.target;
+        const taskID = parseInt(checkbox.getAttribute("data-task-id"));
+        const listName = checkbox.getAttribute("data-list");
+        const currentUser = localStorage.getItem("currentUser");
 
-  if (currentUser) {
-    const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-    const list = userLists.find((list) => list.name === listName);
+        if (currentUser) {
+          const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+          const list = userLists.find((list) => list.name === listName);
 
-    if (list && list.tasks) {
-      const task = list.tasks.find((task) => task.id === taskID);
+          if (list && list.tasks) {
+            const task = list.tasks.find((task) => task.id === taskID);
 
-      if (task) {
-        task.completed = checkbox.checked;
+            if (task) {
+              task.completed = checkbox.checked;
 
-        // Guardar los cambios en localStorage
-        localStorage.setItem(currentUser, JSON.stringify(userLists));
+              // Guardar los cambios en localStorage
+              localStorage.setItem(currentUser, JSON.stringify(userLists));
 
-        // Volver a filtrar y mostrar las tareas después del cambio
-        displayTasks();
+              const taskItem = checkbox.closest(".task-item");
+
+              if (checkbox.checked) {
+                // Aplicar la animación de deslizamiento hacia la derecha
+                taskItem.style.transition = "transform 0.5s ease-out";
+                taskItem.style.transform = "translateX(100%)";
+
+                // Esperar a que la animación termine antes de volver a filtrar y mostrar las tareas
+                setTimeout(() => {
+                  // Volver a filtrar y mostrar las tareas después del cambio
+                  displayTasks();
+                }, 500); // Esperar la duración de la animación
+              } else {
+                // Aplicar la animación de deslizamiento hacia la izquierda
+                taskItem.style.transition = "transform 0.5s ease-out";
+                taskItem.style.transform = "translateX(-100%)";
+
+                // Esperar a que la animación termine antes de volver a filtrar y mostrar las tareas
+                setTimeout(() => {
+                  // Volver a filtrar y mostrar las tareas después del cambio
+                  displayTasks();
+                }, 500); // Esperar la duración de la animación
+              }
+            }
+          }
+        }
       }
-    }
-  }
-}
-
 
       // Ejecutar las funciones cuando se carga la página
       document.addEventListener("DOMContentLoaded", () => {
         populateListSelect();
         displayTasks(); // Mostrar todas las tareas inicialmente
+      });
+      document.addEventListener('DOMContentLoaded', () => {
+        const taskForm = document.getElementById('add-fast-task');
+        const taskInput = document.getElementById('quick-task-input');
+        const currentUser = localStorage.getItem('currentUser');
+
+        // Añadir tarea rápida al enviar el formulario
+        taskForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          const taskName = taskInput.value.trim();
+
+          if (!taskName) {
+            alert('Por favor, introduzca una tarea rápida.');
+            return;
+          }
+
+          if (currentUser) {
+            let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+            const listName = 'Tareas rápidas';
+            let list = userLists.find(list => list.name === listName);
+
+            if (!list) {
+              // Crear la lista si no existe
+              list = { name: listName, tasks: [], quantity: 0 };
+              userLists.push(list);
+            }
+
+            // Obtener el ID de tarea
+            const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            const account = accounts.find(acc => acc.email === currentUser);
+            let taskID = account ? (account.taskID || 0) : 0;
+
+            // Crear nueva tarea
+            const newTask = {
+              id: taskID,
+              name: taskName,
+              date: null,
+              hour: null,
+              completed: false
+            };
+
+            list.tasks.push(newTask);
+            list.quantity += 1;
+
+            // Actualizar taskID en el objeto de cuenta
+            if (account) {
+              account.taskID = taskID + 1;
+              localStorage.setItem('accounts', JSON.stringify(accounts));
+            }
+
+            // Guardar cambios en localStorage
+            localStorage.setItem(currentUser, JSON.stringify(userLists));
+
+            alert('Tarea rápida añadida correctamente.');
+
+            taskForm.reset();
+            displayTasks();
+
+          } else {
+            alert('No hay usuario actual. Inicie sesión para añadir tareas.');
+          }
+        });
       });
     </script>
   </body>
