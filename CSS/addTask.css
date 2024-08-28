@@ -183,3 +183,12 @@
 .input .list-container {
     width: 100%;
 }
+.vector-icon {
+  position: flex;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ECE3E3;
+  background-color: #ECE3E3;
+  border-radius: 6px; 
+  padding: 2px; 
+}

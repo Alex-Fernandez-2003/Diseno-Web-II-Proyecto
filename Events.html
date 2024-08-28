@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link rel="stylesheet" href="./CSS/global.css" />
+    <link rel="stylesheet" href="./CSS/events.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <div class="margin">
+        <div class="mobile">
+            <div class="section-list">
+                <select class="taskListSelect" id="taskListSelect">
+                    <option value="notCompleted">Eventos No Terminados</option>
+                    <option value="completed">Eventos Terminados</option>
+                </select>
+            </div>
+            <div class="section-options">
+                <div class="option-with-title">
+                    <p>Volver</p>
+                    <a href="home.html">
+                        <img src="images/iconBack.png" alt="Volver" />
+                    </a>
+                </div>
+                <div class="page-title">Eventos</div>
+                <div class="option-with-title">
+                    <p>Evento</p>
+                    <a href="addEvent.html">
+                        <img src="images/iconAddEvent.png" alt="Añadir Evento" />
+                    </a>
+                </div>
+            </div>
+
+            <div class="container-task">
+                <ul class="task-list">
+                    <!-- Los eventos se llenarán aquí -->
+                </ul>
+            </div>
+
+            <img class="textures" alt="" src="images/texture.png" />
+        </div>
+    </div>
+
+    <script>
+        function displayEvents() {
+            const currentUser = localStorage.getItem("currentUser");
+            const selectedOption = document.getElementById("taskListSelect").value;
+
+            if (currentUser) {
+                const eventListContainer = document.querySelector(".task-list");
+                const userEvents = JSON.parse(localStorage.getItem('events')) || {};
+                const events = userEvents[currentUser] || [];
+
+                eventListContainer.innerHTML = ""; // Limpiar la lista actual
+
+                let eventsToShow = [];
+
+                if (selectedOption === "completed") {
+                    eventsToShow = events.filter((event) => event.completed);
+                } else {
+                    eventsToShow = events.filter((event) => !event.completed);
+                }
+
+                // Ordenar eventos por fecha y hora
+                eventsToShow.sort((a, b) => {
+                    const dateA = a.date ? new Date(`${a.date}T${a.startHour || '00:00'}`) : Infinity;
+                    const dateB = b.date ? new Date(`${b.date}T${b.startHour || '00:00'}`) : Infinity;
+
+                    return dateA - dateB;
+                });
+
+                // Crear y agregar los elementos de los eventos al contenedor
+                eventsToShow.forEach((event) => {
+                    if (!event.id) {
+                        console.error('Event ID is missing for:', event);
+                        return;
+                    }
+                    const eventItem = document.createElement("li");
+                    eventItem.className = "task-item";
+                    eventItem.innerHTML = `
+                        <div class="item-container"></div>
+                        <div class="container-date">
+                            <div class="date">${event.date || ""}</div>
+                            ${event.startHour ? `<div class="start-time">${event.startHour}</div>` : ""}
+                            ${event.endHour ? `<div class="end-time">${event.endHour}</div>` : ""}
+                        </div>
+                        <div class="task">${event.name || "Evento sin nombre..."}</div>
+                        <img src="images/pencil.png" alt="Editar Evento" class="vector-icon" data-event-id="${event.id}" />
+                    `;
+
+                    eventListContainer.appendChild(eventItem);
+                });
+
+                // Agregar eventos a las imágenes para redirigir al editar evento
+                document.querySelectorAll(".vector-icon").forEach((icon) => {
+                    icon.addEventListener("click", (event) => {
+                        const eventID = event.target.getAttribute("data-event-id");
+                        if (eventID) {
+                            window.location.href = `editEvent.html?eventID=${eventID}`;
+                        } else {
+                            console.error('Event ID is missing on icon click:', event);
+                        }
+                    });
+                });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            displayEvents();
+            document.getElementById("taskListSelect").addEventListener("change", displayEvents);
+        });
+    </script>
+</body>
+</html>

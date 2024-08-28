@@ -20,11 +20,12 @@
                         <img src="images/iconBack.png" alt="Volver" />
                     </a>
                 </div>
-                <div class="page-title">Nuevo Evento</div>
+                <div class="page-title">Editar Evento</div>
                 <div class="option-with-title">
+                    <!-- Añadir opción para eliminar evento si es necesario -->
                 </div>
             </div>
-            <form id="add-event" class="forms" method="POST">
+            <form id="edit-event" class="forms" method="POST">
                 <div class="input">
                     <label class="form-text" for="event">¿Qué hay que hacer?</label>
                     <input type="text" class="input-text" id="event" name="event" placeholder="Nombre del evento" required aria-label="Nombre del evento">
@@ -39,8 +40,12 @@
                     <label class="form-text" for="note">Agregar Nota</label>
                     <input type="text" class="input-text" id="note" name="note" placeholder="Introduzca nota" aria-label="Nota">
                 </div>
+                <div class="input">
+                    <label class="form-text" for="completed">¿Completado?</label>
+                    <input type="checkbox" id="completed" name="completed" aria-label="Marcar como completado">
+                </div>
                 <div>
-                    <button type="submit" class="button" aria-label="Añadir evento">Añadir Evento</button>
+                    <button type="submit" class="button" aria-label="Guardar cambios">Guardar Cambios</button>
                 </div>
             </form>
         </div>
@@ -51,8 +56,13 @@
             const dateInput = document.getElementById('date');
             const startHourInput = document.getElementById('start-hour');
             const endHourInput = document.getElementById('end-hour');
-            const eventForm = document.getElementById('add-event');
+            const eventForm = document.getElementById('edit-event');
             const currentUser = localStorage.getItem('currentUser');
+            const completedCheckbox = document.getElementById('completed');
+
+            // Obtener el ID del evento desde la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventID = parseInt(urlParams.get('eventID'));
 
             // Cambiar tipo de input al enfocar y desenfocar
             dateInput.addEventListener('focus', function() {
@@ -87,6 +97,22 @@
                     this.placeholder = 'Hora de fin';
                 }
             });
+            
+            // Rellenar el formulario con los datos del evento
+            if (currentUser && !isNaN(eventID)) {
+                let events = JSON.parse(localStorage.getItem('events')) || {};
+                if (events[currentUser]) {
+                    const event = events[currentUser].find(event => event.id === eventID);
+                    if (event) {
+                        document.getElementById('event').value = event.name || "";
+                        dateInput.value = event.date || "";
+                        startHourInput.value = event.startHour || "";
+                        endHourInput.value = event.endHour || "";
+                        document.getElementById('note').value = event.notes[0]?.note || ""; // Mostrar la primera nota si existe
+                        completedCheckbox.checked = event.completed || false;
+                    }
+                }
+            }
 
             // Manejo de envío de formulario
             eventForm.addEventListener('submit', (e) => {
@@ -99,9 +125,10 @@
                 const eventNote = document.getElementById('note').value.trim();
                 const noteTime = new Date().toLocaleTimeString();
                 const noteDate = new Date().toLocaleDateString();
+                const isCompleted = completedCheckbox.checked;
 
                 if (!eventName) {
-                    alert('Por favor, complete todos los campos antes de añadir el evento.');
+                    alert('Por favor, complete todos los campos antes de guardar el evento.');
                     return;
                 }
 
@@ -119,32 +146,26 @@
                     const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
                     const account = accounts.find(acc => acc.email === currentUser);
 
-                    // Obtener y actualizar el ID del evento
-                    let eventID = account.eventID || 0;
-                    const newEvent = {
-                        id: eventID,
-                        name: eventName,
-                        date: eventDate,
-                        startHour: startHour,
-                        endHour: endHour,
-                        notes: [],
-                        completed:false
-                    };
+                    // Obtener y actualizar el evento
+                    const eventIndex = events[currentUser].findIndex(event => event.id === eventID);
+                    if (eventIndex !== -1) {
+                        events[currentUser][eventIndex] = {
+                            id: eventID,
+                            name: eventName,
+                            date: eventDate,
+                            startHour: startHour,
+                            endHour: endHour,
+                            notes: eventNote ? [{ note: eventNote, date: noteDate, time: noteTime }] : [],
+                            completed: isCompleted
+                        };
 
-                    if (eventNote) {
-                        newEvent.notes.push({ note: eventNote, date: noteDate, time: noteTime });
+                        localStorage.setItem('events', JSON.stringify(events));
+                        alert('Evento actualizado con éxito.');
+                        eventForm.reset();
+                        window.location.href = 'home.html'; // Redirigir de vuelta a la página principal
+                    } else {
+                        alert('No se pudo encontrar el evento para actualizar.');
                     }
-
-                    events[currentUser].push(newEvent);
-
-                    // Actualizar eventID en el objeto de cuentas
-                    account.eventID += 1;
-
-                    localStorage.setItem('events', JSON.stringify(events));
-                    localStorage.setItem('accounts', JSON.stringify(accounts));
-
-                    alert('Evento añadido con éxito.');
-                    eventForm.reset();
                 } else {
                     alert('No hay un usuario activo. Por favor, inicie sesión para continuar.');
                 }

@@ -69,18 +69,6 @@
   </div>
 
   <script>
-    function getCurrentTaskIdKey() {
-      const currentUser = localStorage.getItem("currentUser");
-      return currentUser ? `currentTaskId_${currentUser}` : "currentTaskId_default";
-    }
-
-    function generateUniqueId() {
-      const key = getCurrentTaskIdKey();
-      let currentId = parseInt(localStorage.getItem(key) || "0", 10);
-      localStorage.setItem(key, (currentId + 1).toString());
-      return currentId;
-    }
-
     const form = document.getElementById('register-form');
     const emailError = document.getElementById('email-error');
     const passwordError = document.getElementById('password-error');
@@ -129,7 +117,7 @@
         message.textContent = 'El correo ya se encuentra en uso';
         message.style.color = 'red'; // Establece el color del mensaje de error
       } else {
-        const newAccount = { email, password, taskId: generateUniqueId() };
+        const newAccount = { email, password, taskID: 0 ,eventID: 0 };
         accounts.push(newAccount);
         localStorage.setItem('accounts', JSON.stringify(accounts));
         message.textContent = 'Cuenta registrada exitosamente.';

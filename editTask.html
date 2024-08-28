@@ -22,9 +22,9 @@
                 </div>
                 <div class="page-title">Editar Tarea</div>
                 <div class="option-with-title">
-                    <p>Evento</p>
-                    <a href="addEvent.html">                        
-                        <img src="images/iconAddEvent.png" alt="Añadir Evento" />
+                    <p>Eliminar</p>
+                    <a id="delete-task">                        
+                        <img src="images/trash.png" alt="Eliminar tarea" class="vector-icon"/>
                     </a>
                 </div>
             </div>
@@ -35,13 +35,13 @@
                 </div>
                 <div class="input">
                     <label class="form-text" for="date">¿Fecha Límite?</label>
-                    <input type="text" class="input-text" id="date" name="date" placeholder="Fecha sin fijar" aria-label="Fecha límite">
+                    <input type="text" class="input-text" id="date" name="date" placeholder="Fecha sin fijar" aria-label="Fecha límite" required>
                     <input type="text" class="input-text" id="hour" name="hour" placeholder="Sin hora (todo el día)" aria-label="Hora límite">
                 </div>
                 <div class="input">
                     <label class="form-text" for="listName">Añadir a la lista</label>
-                    <div class="list-container">
-                        <select id="listName" name="listName" class="input-text" aria-label="Lista de tareas">
+                    <div class="list-container custom-alignment">
+                        <select id="listName" name="listName" class="input-text" aria-label="Lista de tareas" required>
                             <option value="" disabled selected>Selecciona una lista</option>
                             <!-- Las opciones de listas se llenarán dinámicamente -->
                         </select>
@@ -79,6 +79,7 @@
             const createNewListButton = document.getElementById('create-new-list-button');
             const taskForm = document.getElementById('add-task');
             const taskNameInput = document.getElementById('task');
+            const deleteTaskButton = document.getElementById('delete-task'); // Referencia al botón de eliminar
             const currentUser = localStorage.getItem('currentUser');
             
             // Obtener el ID de la tarea desde la URL
@@ -88,7 +89,7 @@
             // Rellenar el formulario con los datos de la tarea
             if (currentUser && !isNaN(taskID)) {
                 const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-    
+
                 userLists.forEach((list) => {
                     if (list.tasks) {
                         const task = list.tasks.find(task => task.id === taskID);
@@ -97,24 +98,23 @@
                             dateInput.value = task.date || "";
                             hourInput.value = task.hour || "";
                             listNameSelect.innerHTML = ""; // Limpiar el select
-    
-                            // Agregar las opciones de listas al select
+
+                            // Agregar las opciones de listas al select, omitiendo "Tareas rápidas"
                             userLists.forEach((list) => {
-                                const option = document.createElement('option');
-                                option.value = list.name;
-                                option.text = list.name;
-                                if (list.name === list.name) {
-                                    option.selected = true;
+                                if (list.name !== "Tareas rápidas") {  // Omitir "Tareas rápidas"
+                                    const option = document.createElement('option');
+                                    option.value = list.name;
+                                    option.text = list.name;
+                                    listNameSelect.appendChild(option);
                                 }
-                                listNameSelect.appendChild(option);
                             });
-    
+
                             listNameSelect.value = list.name; // Seleccionar la lista correcta
                         }
                     }
                 });
             }
-    
+
             // Al enviar el formulario, actualizar la tarea en localStorage
             taskForm.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -142,8 +142,6 @@
                                         newList.tasks.push(task);
                                         newList.quantity = newList.tasks.length;  // Actualizar la cantidad de tareas en la nueva lista
                                     }
-                                } else {
-                                    // Si la tarea permanece en la misma lista, no hay necesidad de actualizar quantity
                                 }
             
                                 // Guardar los cambios en localStorage
@@ -156,7 +154,26 @@
                 }
             });
             
-    
+            // Eliminar tarea
+            deleteTaskButton.addEventListener('click', () => {
+                if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
+                    if (currentUser && !isNaN(taskID)) {
+                        let userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+                        userLists = userLists.map(list => {
+                            if (list.tasks) {
+                                list.tasks = list.tasks.filter(task => task.id !== taskID);
+                                list.quantity = list.tasks.length;  // Actualizar la cantidad de tareas en la lista
+                            }
+                            return list;
+                        });
+
+                        localStorage.setItem(currentUser, JSON.stringify(userLists));
+                        alert('Tarea eliminada correctamente.');
+                        window.location.href = 'home.html'; // Redirigir de vuelta a la página principal
+                    }
+                }
+            });
+
             // Cambiar tipo de input al enfocar y desenfocar
             dateInput.addEventListener('focus', function() {
                 this.type = 'date';
@@ -179,42 +196,45 @@
                     this.placeholder = 'Sin hora (todo el día)';
                 }
             });
-    
-            // Mostrar modal
+
             createNewListButton.addEventListener('click', () => {
                 addListModal.style.display = 'block';
             });
     
-            // Cerrar modal
             closeModalButton.addEventListener('click', () => {
                 addListModal.style.display = 'none';
             });
     
-            // Añadir nueva lista
             addListSubmitButton.addEventListener('click', () => {
                 const newListName = listNameInput.value.trim();
-                if (newListName && currentUser) {
+                if (newListName) {
                     const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-    
                     if (!userLists.some(list => list.name === newListName)) {
-                        userLists.push({ name: newListName, tasks: [], quantity: 0 });
+                        userLists.push({
+                            name: newListName,
+                            tasks: [],
+                            quantity: 0,
+                        });
                         localStorage.setItem(currentUser, JSON.stringify(userLists));
-    
-                        const option = document.createElement('option');
-                        option.value = newListName;
-                        option.text = newListName;
-                        listNameSelect.appendChild(option);
-                        listNameSelect.value = newListName;
-    
-                        addListModal.style.display = 'none';
-                        listNameInput.value = '';
+                        alert('Lista creada exitosamente.');
+                        listNameSelect.innerHTML = ""; // Limpiar el select
+                        userLists.forEach((list) => {
+                            if (list.name !== "Tareas rápidas") {  // Omitir "Tareas rápidas"
+                                const option = document.createElement('option');
+                                option.value = list.name;
+                                option.text = list.name;
+                                listNameSelect.appendChild(option);
+                            }
+                        });
+                        listNameSelect.value = newListName; // Seleccionar la nueva lista
                     } else {
-                        alert('Ya existe una lista con ese nombre.');
+                        alert('Ya existe una lista con este nombre.');
                     }
                 }
+                addListModal.style.display = 'none';
             });
+
         });
     </script>
-    
 </body>
 </html>

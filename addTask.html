@@ -35,14 +35,14 @@
                 </div>
                 <div class="input">
                     <label class="form-text" for="date">¿Fecha Límite?</label>
-                    <input type="text" class="input-text" id="date" name="date" placeholder="Fecha sin fijar" aria-label="Fecha límite">
+                    <input type="text" class="input-text" id="date" name="date" placeholder="Fecha sin fijar" aria-label="Fecha límite" required>
                     <input type="text" class="input-text" id="hour" name="hour" placeholder="Sin hora (todo el día)" aria-label="Hora límite">
                 </div>
 
                 <div class="input">
                     <label class="form-text" for="listName">Añadir a la lista</label>
                     <div class="list-container custom-alignment">
-                        <select id="listName" name="listName" class="input-text" aria-label="Lista de tareas">
+                        <select id="listName" name="listName" class="input-text" aria-label="Lista de tareas" required>
                             <option value="" disabled selected>Selecciona una lista</option>
                             <!-- Las opciones de listas se llenarán dinámicamente -->
                         </select>
@@ -160,21 +160,32 @@
             });
 
             // Cargar listas al iniciar
-            if (currentUser) {
-                const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
-                userLists.forEach(list => {
-                    const option = document.createElement('option');
-                    option.value = list.name;
-                    option.textContent = list.name;
-                    listNameSelect.appendChild(option);
-                });
-            } else {
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'No hay listas disponibles';
-                option.disabled = true;
-                listNameSelect.appendChild(option);
-            }
+if (currentUser) {
+    const userLists = JSON.parse(localStorage.getItem(currentUser)) || [];
+    userLists.forEach(list => {
+        if (list.name !== "Tareas rápidas") {  // Omitir "Tareas rápidas"
+            const option = document.createElement('option');
+            option.value = list.name;
+            option.textContent = list.name;
+            listNameSelect.appendChild(option);
+        }
+    });
+
+    // Verificar si se omitieron todas las listas y no se agregó ninguna opción
+    if (listNameSelect.options.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No hay listas disponibles';
+        option.disabled = true;
+        listNameSelect.appendChild(option);
+    }
+} else {
+    const option = document.createElement('option');
+    option.value = '';
+    option.textContent = 'No hay listas disponibles';
+    option.disabled = true;
+    listNameSelect.appendChild(option);
+}
 
             // Manejo de envío de formulario
             taskForm.addEventListener('submit', (e) => {
