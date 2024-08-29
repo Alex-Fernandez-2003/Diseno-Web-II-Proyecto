@@ -23,6 +23,8 @@
   border: 6px solid #050000;
   box-sizing: border-box;
   height: 70%;
+  overflow: auto;
+
 }
 
 .user-title {

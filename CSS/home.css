@@ -11,42 +11,48 @@
 
 .task {
     position: relative;
-    margin-right: 5px;
-    margin-left: 10px;
+    margin-right: 1vw;
+    margin-left: 2vw;
     display: flex;
-    width: 60%;
-    font-size: relative;
+    width: 60vw;
+    font-size: 2vh; /* Ajustado a vh */
 }
 
 .container-iconAdd {
-    position:relative;
-    display: flex;
+    position: absolute;
+    display: flex; 
+    left: 50%; 
+    height: 15vh; /* 15% de la altura de la ventana */
+    width: 100vw; /* Asegúrate de que ocupe el 100% del ancho del viewport */
+    transform: translateX(-50%);
     flex-direction: column; /* Alinea los elementos en una columna */
     justify-content: center; /* Centra verticalmente */
     align-items: center; /* Centra horizontalmente */
-    gap: 10px; /* Espacio entre la imagen y el input */
-    margin-top:80%; /* Margen superior para separar del contenido anterior */
+    gap: 1vw; /* Espacio entre la imagen y el input */
+    bottom: 5vh; /* Ancla el contenedor al fondo */
 }
 
 .icon-add {
-    width: 70px;
-    height: 70px;
+    width: 15vh;
+    height: 15vh;
+    max-width: 10vw; /* Limite máximo relativo al ancho del viewport */
+    max-height: 10vh; /* Limite máximo relativo a la altura del viewport */
 }
 
 .quick-task-input {
-    width: 100%; /* Ajusta el ancho según sea necesario */
-    max-width: 300px; /* Establece un ancho máximo para el input */
-    padding: 10px;
-    border-radius: 5px;
+    width: 90vw; /* Ajusta el ancho según sea necesario */
+    max-width: 80vw; /* Establece un ancho máximo para el input */
+    padding: 2vh;
+    border-radius: 0.5vh;
     border: 1px solid #ccc; /* Bordes del input */
 }
 
 .container-task {
-    position: absolute;;
-    left: 50px;
-    width: 345px;
-    max-height: 37.5%;
-    font-size: 16px;
+    position: relative;
+    margin: 0 auto;
+    width: 80vw;
+    height: 37vh;
+    font-size: 2vh; /* Ajustado a vh */
     color: rgba(0, 0, 0, 0.9);
     overflow: auto;
 }
@@ -60,77 +66,77 @@
 .task-item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px; /* Espacio entre cada item */
-    border-radius: 4px;
+    margin-bottom: 1vh; /* Espacio entre cada item */
+    border-radius: 0.5vh;
     background-color: #fff;
-    padding: 10px;
+    padding: 1vh;
 }
 
 .title {
     color: white;
-    border: 2px solid #9B1111; 
+    border: 0.5vh solid #9B1111; 
     background-color: #9B1111;
-    border-radius: 10px;
-    padding: 10px; 
+    border-radius: 1vh;
+    padding: 1vh; 
     width: fit-content; 
     margin-left: auto;  /* Ajusta el margen izquierdo automáticamente */
     margin-right: auto; /* Ajusta el margen derecho automáticamente */
     display: block;     /* Asegura que el elemento se comporte como un bloque para que los márgenes automáticos funcionen */
     text-align: center; /* Centra el texto dentro del elemento si hay varias líneas */
-  }
-  
+}
 
-.container-date{
+.container-date {
     position: relative;
     flex-direction: column; /* Alinea los elementos en una columna */
     justify-content: center; 
     display: flex;
     align-items: center;
-    width: 40%;
-    font-size: 12px;
+    width: 40vw;
+    font-size: 2vh; /* Ajustado a vh */
 }
 
 .taskListSelect {
     color: white;
-    border: 2px solid #9B1111; 
+    border: 0.5vh solid #9B1111; 
     background-color: #9B1111;
-    border-radius: 10px;
-    padding: 8px 16px; /* Ajustado para un mejor aspecto */
-    font-size: 18px; /* Reducido ligeramente */
+    border-radius: 1vh;
+    padding: 1vh 2vw; /* Ajustado para un mejor aspecto */
+    font-size: 2.5vh; /* Ajustado a vh */
     font-family: "Audiowide", sans-serif;
 }
 
 .section-list {
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
-    padding: 10px; /* Reducido de 20px a 10px */
-    margin-top: 30px; /* Reducido de 20px a 10px */
+    padding: 1vh; /* Ajustado para un mejor aspecto */
+    top: 5vh;
 }
 
 .button {
     position: relative; 
-    border-radius: 8px;
+    border-radius: 1vh;
     background-color: #dc6464;
     border-color: #dc6464;
     overflow: hidden;
-    margin-left : 10px;
+    margin-left: 2vw;
     display: flex;
     flex-direction: row;
-    align-items: right;
+    align-items: center; /* Ajustado para alinear el contenido */
     justify-content: center;
-    padding: 3px 12px;
+    padding: 1vh 3vw;
     box-sizing: border-box;
-    font-size: 25px;
+    font-size: 2.5vh; /* Ajustado a vh */
     color: #fff;
 }
 
 .vector-icon {
     position: flex;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ECE3E3;
+    width: 2vw;
+    height: 2vw;
+    border: 0.2vh solid #ECE3E3;
     background-color: #ECE3E3;
-    border-radius: 6px; 
-    padding: 2px; 
+    border-radius: 0.5vh; 
+    padding: 0.5vh; 
 }
