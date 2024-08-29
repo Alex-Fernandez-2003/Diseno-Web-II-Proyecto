@@ -1,41 +1,53 @@
 body {
-    font-family: "Audiowide", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-
-.textures {
-    position: absolute;
-    top: 20px;
-    left: 30px; 
-    width: 393px;
-    height: 852px;
-    object-fit: cover;
-    opacity: 0.35;
-    mix-blend-mode: overlay;
-    pointer-events: none;
+  font-family: "Audiowide", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .margin {
-    width: 414px;
-    height: 896px;
-    position: relative;
-    background-color: #cd4640;
-    overflow: hidden;
-    text-align: left;
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.9);
+  width: 100vw;
+  height: 100vh;
+  background-color: #cd4640;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mobile {
-    position: absolute;
-    top: 0px;
-    left: -19px;
-    background-color: #cd4640;
-    width: 457px;
-    height: 912px;
-    overflow: hidden;
-  }
+  background-color: #cd4640;
+  width: 90%; /* 100% menos el margen del 5% a cada lado */
+  height: 90%; /* 100% menos el margen del 5% en la parte superior e inferior */
+  max-width: 457px; /* Esto limita el tamaño máximo en pantallas grandes */
+  max-height: 912px; /* Esto limita el tamaño máximo en pantallas grandes */
+  position: relative;
+}
+
+.textures {
+  position: absolute;
+  top: 5%; /* Margen del 5% desde la parte superior */
+  left: 5%; /* Margen del 5% desde la parte izquierda */
+  width: 90%; /* 100% menos el margen del 5% a cada lado */
+  height: 90%; /* 100% menos el margen del 5% en la parte superior e inferior */
+  object-fit: cover; /* Asegura que la imagen cubra completamente el área */
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 .checkbox {
@@ -47,7 +59,7 @@ body {
 
 .copyright {
   position: absolute;
-  bottom: 94px;
+  top: 88%;
   left: 50%;
   transform: translateX(-50%);
   white-space: pre-wrap;

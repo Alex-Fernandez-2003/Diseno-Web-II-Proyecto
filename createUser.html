@@ -15,6 +15,7 @@
   <div class="margin">
     <div class="mobile">
       <img class="textures" alt="" src="images/texture.png" />
+      <img class="image-1-icon" alt="" src="images/logo.png">
       <div class="formbox">
         <div class="user-title">Crear Cuenta</div>
         <div class="signupbuttons">
@@ -38,33 +39,37 @@
           <div class="border"></div>
         </div>
 
-        <form id="register-form" class="forms" method="POST">
-          <div class="input">
-            <label class="o" for="email">Email</label>
-            <input type="text" class="input-text" id="email" name="email" placeholder="Introduzca el email">
-            <span id="email-error" class="error-message"></span>
-          </div>
-          <div class="input">
-            <label class="o" for="password">Contraseña</label>
-            <input type="password" class="input-text" id="password" name="password" placeholder="Introduzca contraseña">
-            <span id="password-error" class="error-message"></span>
-          </div>
-          <div>
-            <button type="submit" class="button">Crear Cuenta</button>
-          </div>
-        </form>
+        <div>
+          <form id="register-form" class="forms" method="POST">
+            <div class="input">
+              <label class="o" for="email">Email</label>
+              <input type="text" class="input-text" id="email" name="email" placeholder="Introduzca el email">
+              <span id="email-error" class="error-message"></span>
+            </div>
+            <div class="input">
+              <label class="o" for="password">Contraseña</label>
+              <input type="password" class="input-text" id="password" name="password" placeholder="Introduzca contraseña">
+              <span id="password-error" class="error-message"></span>
+            </div>
+            <div class="input">
+              <button type="submit" class="button">Crear Cuenta</button>
+            </div>
+          </form>
+        </div>
+        
 
         <div class="button-message">
           <span>¿Ya tienes una cuenta? </span>
           <a href="loginUser.html" id="login-link" class="link">Inicia Sesión</a>
         </div>
+        
         <div class="register-message">
           <span id="message"></span>
         </div>
       </div>
-
-      <div class="copyright">© 2024 Todos los derechos reservados</div>
-      <img class="image-1-icon" alt="" src="images/logo.png">
+      <div>
+        <div class="copyright">© 2024 Todos los derechos reservados</div>
+      </div>
     </div>
   </div>
 
@@ -117,7 +122,7 @@
         message.textContent = 'El correo ya se encuentra en uso';
         message.style.color = 'red'; // Establece el color del mensaje de error
       } else {
-        const newAccount = { email, password, taskID: 1 ,eventID: 1 };
+        const newAccount = { email, password, taskID: 0, eventID: 0 };
         accounts.push(newAccount);
         localStorage.setItem('accounts', JSON.stringify(accounts));
         message.textContent = 'Cuenta registrada exitosamente.';
@@ -127,7 +132,7 @@
       form.reset();
     });
 
-    document.getElementById('login-link').addEventListener('click', function(e) {
+    document.getElementById('login-link').addEventListener('click', function (e) {
       e.preventDefault(); // Evita la acción por defecto del enlace
 
       // Agrega la clase de animación al cuerpo o al contenedor principal
