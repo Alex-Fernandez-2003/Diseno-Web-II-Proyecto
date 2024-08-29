@@ -117,7 +117,7 @@
         message.textContent = 'El correo ya se encuentra en uso';
         message.style.color = 'red'; // Establece el color del mensaje de error
       } else {
-        const newAccount = { email, password, taskID: 0 ,eventID: 0 };
+        const newAccount = { email, password, taskID: 1 ,eventID: 1 };
         accounts.push(newAccount);
         localStorage.setItem('accounts', JSON.stringify(accounts));
         message.textContent = 'Cuenta registrada exitosamente.';
